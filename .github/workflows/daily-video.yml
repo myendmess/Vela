@@ -1,0 +1,40 @@
+name: Daily Recap Video (YouTube Short)
+
+on:
+  schedule:
+    - cron: '0 6 * * 2-6'   # 06:00 UTC, Tue–Sat — recaps the previous US close (sp500.json refreshes 23:00 UTC)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Build the payload only — no render, no upload'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-video
+  cancel-in-progress: false
+
+jobs:
+  video:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 50   # staleness guard reads the data file's last commit date
+
+      - name: Build & publish daily recap Short
+        env:
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          SHOTSTACK_API_KEY: ${{ secrets.SHOTSTACK_API_KEY }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            node video/make_video.js --dry-run
+          else
+            node video/make_video.js
+          fi
