@@ -1,7 +1,7 @@
 # Mapping — interactive global market heatmap
 
 Everything for the market-map / dashboard project lives in this folder (`mapping/`).
-It is **not** a separate repo — just the self-contained project home inside Market-Scan,
+It is **not** a separate repo — just the self-contained project home inside Vela,
 a sibling of `reports/`.
 
 **What it is:** a finviz-style interactive heatmap — pick an index, drill
@@ -72,8 +72,8 @@ mapping/
 
 ## Build & deploy
 - **Hosting:** GitHub Pages, **Deploy from a branch** (`main` / root). The repo-root
-  `index.html` redirects `…/Market-Scan/` → `…/Market-Scan/mapping/dashboard/`; `.nojekyll`
-  serves files as-is. Live: **https://myendmess.github.io/Market-Scan/**.
+  `index.html` redirects `…/Vela/` → `…/Vela/mapping/dashboard/`; `.nojekyll`
+  serves files as-is. Live: **https://myendmess.github.io/Vela/**.
 - **Builder:** `scripts/build_sp500.py` → writes `dashboard/data/sp500.json`. Runs in CI
   (Python 3.11). Env: `RATE_SLEEP`, `LIMIT` (cap symbols for testing), `FINNHUB_API_KEY`
   (optional 52-week fallback). No local Python on the dev box — verify via CI.

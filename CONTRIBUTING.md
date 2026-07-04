@@ -1,4 +1,4 @@
-# Contributing to Market-Scan
+# Contributing to Vela
 
 Thanks for your interest! Issues and pull requests are welcome — this is a
 solo-maintained portfolio project, so expect friendly but not instant reviews.

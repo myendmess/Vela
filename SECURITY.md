@@ -10,8 +10,8 @@ and what GitHub Pages serves.
 Please report vulnerabilities privately — **do not open a public issue** for
 security problems.
 
-- Email: **boujnanemohamed23@gmail.com** (subject: `[SECURITY] Market-Scan`)
-- Or use GitHub's [private vulnerability reporting](https://github.com/myendmess/Market-Scan/security/advisories/new)
+- Email: **boujnanemohamed23@gmail.com** (subject: `[SECURITY] Vela`)
+- Or use GitHub's [private vulnerability reporting](https://github.com/myendmess/Vela/security/advisories/new)
   if enabled on the repository.
 
 This is a solo-maintained project: expect an acknowledgment within a few days
