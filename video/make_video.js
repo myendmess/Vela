@@ -28,6 +28,23 @@ const MAX_DATA_AGE_HOURS = 18;
 const log = (...a) => console.log(new Date().toISOString().slice(11, 19), ...a);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// video/state.json remembers which headlines past videos used (14-day window)
+// so no headline ever appears in two videos. Committed back by the workflow.
+const STATE_FILE = path.join(__dirname, 'state.json');
+
+function loadState() {
+  try {
+    const s = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    return { used_headlines: Array.isArray(s.used_headlines) ? s.used_headlines : [] };
+  } catch (e) {
+    return { used_headlines: [] };
+  }
+}
+
+function saveState(state) {
+  fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2) + '\n');
+}
+
 async function jfetch(url, opts, what) {
   const res = await fetch(url, opts);
   const text = await res.text();
@@ -61,7 +78,10 @@ async function getNews(movers) {
   }
   const companyNews = [];
   const to = new Date().toISOString().slice(0, 10);
-  const from = new Date(Date.now() - 3 * 864e5).toISOString().slice(0, 10);
+  // window = since the previous trading day: Tuesday recaps Monday, whose moves
+  // are often driven by weekend news, so look back 4 days; otherwise 2 is enough
+  const lookbackDays = new Date().getUTCDay() === 2 ? 4 : 2;
+  const from = new Date(Date.now() - lookbackDays * 864e5).toISOString().slice(0, 10);
   for (const m of movers) {
     try {
       const items = await jfetch(
@@ -174,8 +194,16 @@ async function main() {
   const { generalNews, companyNews } = await getNews(movers);
   log('News:', generalNews.length, 'general items,', companyNews.length, 'company items for', movers.map(m => m.ticker).join('/'));
 
-  // 3. Build payload
-  const payload = buildPayload({ stocks, generalNews, companyNews, movers, cfg });
+  // 3. Build payload (usedBefore = headlines already shown in past videos)
+  const state = loadState();
+  const payload = buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefore: state.used_headlines.map(e => e.h) });
+
+  const allNews = [...generalNews, ...companyNews];
+  for (const h of payload.used_headlines) {
+    const item = allNews.find(n => n && n.headline === h);
+    const ageH = item && item.datetime ? ((Date.now() / 1000 - item.datetime) / 3600).toFixed(1) + 'h old' : 'age unknown';
+    log(`Headline used (${ageH}):`, h.slice(0, 90));
+  }
   const tracks = payload.timeline.tracks;
   const duration = Math.max(...tracks.flatMap(tr => tr.clips.map(c => c.start + c.length)));
   log('Payload built:', tracks.length, 'tracks,', tracks.reduce((a, tr) => a + tr.clips.length, 0), 'clips,', duration.toFixed(1) + 's');
@@ -205,6 +233,16 @@ async function main() {
   const accessToken = await getAccessToken();
   const videoId = await uploadToYouTube(videoBuf, payload.youtube, accessToken);
   log('PUBLISHED: https://www.youtube.com/shorts/' + videoId);
+
+  // remember this run's headlines so future videos never repeat them (14-day window)
+  const today = new Date().toISOString().slice(0, 10);
+  const cutoff = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
+  state.used_headlines = [
+    ...state.used_headlines.filter(e => e.d >= cutoff),
+    ...payload.used_headlines.map(h => ({ h: h, d: today }))
+  ];
+  saveState(state);
+  log('News memory updated:', state.used_headlines.length, 'headlines in the 14-day window');
 
   const playlistId = process.env.PLAYLIST_ID || cfg.playlist_id;
   if (playlistId) {

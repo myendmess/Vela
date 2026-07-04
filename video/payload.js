@@ -20,15 +20,34 @@ function pickMovers(stocks, n) {
   ];
 }
 
-function buildPayload({ stocks, generalNews, companyNews, movers, cfg, now = new Date() }) {
+// Sources that reliably produce market-relevant, non-clickbait headlines
+const GOOD_SOURCES = /reuters|bloomberg|cnbc|marketwatch|wall street|wsj|barron|yahoo|financial times|associated press|investing\.com|seeking ?alpha/i;
+
+function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefore, now = new Date() }) {
   const clean = validStocks(stocks);
   if (clean.length < 50) {
     throw new Error(`Only ${clean.length} tickers loaded from sp500.json - aborting so we don't render a broken video.`);
   }
 
-  const news = (generalNews || []).filter(n => n && n.headline && MARKET_RE.test(n.headline + ' ' + (n.summary || '')));
+  // Never repeat a headline shown in a previous video (usedBefore comes from video/state.json)
+  const usedEver = new Set((usedBefore || []).map(h => String(h)));
+  const nowSec = now.getTime() / 1000;
+
+  const marketNews = (generalNews || []).filter(n =>
+    n && n.headline && !usedEver.has(n.headline) &&
+    MARKET_RE.test(n.headline + ' ' + (n.summary || '')));
+
+  // Prefer headlines from the last 24h; if the feed has none (rare), fall back to
+  // any unused market headline so the news section doesn't silently vanish.
+  const freshNews = marketNews.filter(n => (n.datetime || 0) >= nowSec - 24 * 3600);
+  const pool = freshNews.length ? freshNews : marketNews;
+  const score = n => (GOOD_SOURCES.test(n.source || '') ? 2 : 0)
+    + ((n.headline.length >= 40 && n.headline.length <= 140) ? 1 : 0)
+    - (/[?!]$/.test(n.headline.trim()) ? 1 : 0);
+  const news = [...pool].sort((a, b) => (score(b) - score(a)) || ((b.datetime || 0) - (a.datetime || 0)));
+
   const moverList = (movers || []).filter(m => m && m.ticker);
-  const compNews = (companyNews || []).filter(n => n && n.headline && n.related);
+  const compNews = (companyNews || []).filter(n => n && n.headline && n.related && !usedEver.has(n.headline));
 
   // ---- Stats ----
   const fmt = v => (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
@@ -111,7 +130,8 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, now = new
     t += len;
   }
 
-  const usedHeadlines = new Set();
+  const usedHeadlines = new Set(usedEver); // dedupe within this run AND against past videos
+  const consumed = [];                      // headlines this run actually puts on screen
 
   function headlineFor(ticker) {
     const matches = compNews
@@ -119,6 +139,7 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, now = new
       .sort((a, b) => (b.datetime || 0) - (a.datetime || 0));
     if (!matches.length) return null;
     usedHeadlines.add(matches[0].headline);
+    consumed.push(matches[0].headline);
     return matches[0];
   }
 
@@ -185,6 +206,8 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, now = new
   const genCountRaw = Number(cfg.general_headlines);
   const genCount = Number.isFinite(genCountRaw) && genCountRaw >= 0 ? genCountRaw : 2;
   for (const n of news.filter(x => !usedHeadlines.has(x.headline)).slice(0, genCount)) {
+    usedHeadlines.add(n.headline);
+    consumed.push(n.headline);
     newsSlide('IN THE NEWS', WHITE, n);
   }
 
@@ -237,7 +260,8 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, now = new
   return {
     timeline: timeline,
     output: { format: 'mp4', size: { width: 1080, height: 1920 }, fps: 25 },
-    youtube: { title: title, description: description, tags: tags }
+    youtube: { title: title, description: description, tags: tags },
+    used_headlines: consumed
   };
 }
 
