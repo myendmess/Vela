@@ -14,11 +14,17 @@
 // and copy the refresh token it prints.
 
 const http = require('http');
+const { spawn } = require('child_process');
 
 const CLIENT_ID = process.argv[2];
 const CLIENT_SECRET = process.argv[3];
 if (!CLIENT_ID || !CLIENT_SECRET) {
   console.error('Usage: node video/get_refresh_token.js <CLIENT_ID> <CLIENT_SECRET>');
+  process.exit(1);
+}
+if (/PASTE|YOUR|SECRET_HERE|CLIENT_ID/i.test(CLIENT_SECRET) || !CLIENT_SECRET.startsWith('GOCSPX-')) {
+  console.error('That does not look like a real client secret (they start with "GOCSPX-").');
+  console.error('Copy it from Google Cloud Console -> Credentials -> your OAuth client -> Client secrets.');
   process.exit(1);
 }
 
@@ -70,8 +76,25 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+function openBrowser(url) {
+  const cmd = process.platform === 'win32' ? ['cmd', ['/c', 'start', '', url]]
+    : process.platform === 'darwin' ? ['open', [url]]
+    : ['xdg-open', [url]];
+  try {
+    spawn(cmd[0], cmd[1], { detached: true, stdio: 'ignore' }).unref();
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 server.listen(PORT, () => {
-  console.log('1. Open this URL in your browser and sign in with the YouTube channel account:\n');
-  console.log(authUrl + '\n');
-  console.log('2. Waiting for Google to redirect back to ' + REDIRECT + ' ...');
+  const opened = openBrowser(authUrl);
+  if (opened) {
+    console.log('A browser window is opening - sign in with the YouTube channel account and approve.');
+  } else {
+    console.log('Open this URL in your browser and sign in with the YouTube channel account:\n\n' + authUrl + '\n');
+  }
+  console.log('Waiting for Google to redirect back to ' + REDIRECT + ' ...');
+  console.log('IMPORTANT: do NOT press Ctrl+C in this terminal - it kills the script before the redirect arrives.');
 });
