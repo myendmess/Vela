@@ -12,14 +12,13 @@
 
 <p align="center">
   <a href="https://myendmess.github.io/Market-Scan/mapping/dashboard/"><img alt="Live dashboard" src="https://img.shields.io/badge/S%26P%20500%20heatmap-live-fbbf24?logo=googlechrome&logoColor=black"></a>
-  <a href="https://www.youtube.com/@myfinalmess"><img alt="YouTube channel" src="https://img.shields.io/badge/YouTube-%40myfinalmess-red?logo=youtube&logoColor=white"></a>
-  <a href="https://www.youtube.com/playlist?list=PLL21YW0NJPng"><img alt="Daily recap playlist" src="https://img.shields.io/badge/playlist-daily%20recaps-red?logo=youtube&logoColor=white"></a>
+  <a href="https://www.youtube.com/playlist?list=PLL21YW0NJPng"><img alt="Daily recap playlist" src="https://img.shields.io/badge/YouTube-daily%20recaps-red?logo=youtube&logoColor=white"></a>
   <img alt="Running cost" src="https://img.shields.io/badge/running%20cost-%240%2Fmonth-brightgreen">
 </p>
 
 <p align="center">
   <a href="https://myendmess.github.io/Market-Scan/mapping/dashboard/"><b>Live Dashboard</b></a> ·
-  <a href="https://www.youtube.com/@myfinalmess"><b>YouTube</b></a> ·
+  <a href="https://www.youtube.com/playlist?list=PLL21YW0NJPng"><b>Daily Shorts Playlist</b></a> ·
   <a href="reports/"><b>Reports Archive</b></a> ·
   <a href="mapping/README.md"><b>Heatmap Docs</b></a> ·
   <a href="video/README.md"><b>Video Pipeline Docs</b></a>
@@ -50,7 +49,7 @@ flowchart LR
 | [Long-Term Scan](.github/workflows/scan-longterm.yml) | `0 22 * * 1-5` | Finnhub | ETF & index positioning report → [`reports/longterm/`](reports/longterm/) |
 | [Short-Term Watchlist](.github/workflows/scan-shortterm.yml) | `0 11 * * 1-5` | Alpha Vantage | Penny/small-cap momentum watchlist → [`reports/shortterm/`](reports/shortterm/) |
 | [Heatmap Data](.github/workflows/mapping.yml) | `0 23 * * *` | NASDAQ charts | [Live finviz-style S&P 500 treemap](https://myendmess.github.io/Market-Scan/mapping/dashboard/) |
-| [Daily Recap Video](.github/workflows/daily-video.yml) | `0 6 * * 2-6` | Heatmap data + Finnhub news | Auto-rendered & published [YouTube Short](https://www.youtube.com/@myfinalmess) |
+| [Daily Recap Video](.github/workflows/daily-video.yml) | `0 6 * * 2-6` | Heatmap data + Finnhub news | Auto-rendered & published [YouTube Short](https://www.youtube.com/playlist?list=PLL21YW0NJPng) |
 
 **The daily Short is fully autonomous:** it reads the previous close from the repo's own
 data, picks the day's top movers, finds fresh *relevant* headlines (quality-ranked,
