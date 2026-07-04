@@ -16,8 +16,17 @@ trading morning. Zero npm dependencies — plain Node 18+.
 Intro → market breadth → best/worst sectors → top 5 gainers → "why it moved"
 headline per big gainer → top 5 losers → same for losers → general market
 headlines → outro pointing to the live heatmap. Title/description/tags are
-generated daily from the actual movers (SEO). Tune `movers_with_news`,
-`general_headlines`, branding and `playlist_id` in `video/config.json`.
+generated daily from the actual movers (SEO).
+
+Everything tunable in `video/config.json`:
+
+| key | purpose |
+|---|---|
+| `movers_with_news` / `general_headlines` | how many headline slides |
+| `playlist_id` | playlist every upload is added to (blank = skip) |
+| `privacy_status` | `public` / `unlisted` / `private` |
+| `notify_subscribers` | `true` pings subscribers on each upload (drives Shorts velocity) |
+| `accent_color` / `sound_url` / `site_*` | branding |
 
 ## Secrets (repo Settings → Secrets and variables → Actions)
 - `FINNHUB_API_KEY` — already exists (long-term scan). News degrades gracefully without it.
@@ -31,8 +40,10 @@ generated daily from the actual movers (SEO). Tune `movers_with_news`,
 Until all secrets are set, scheduled runs log `SKIPPED` and exit green — nothing breaks.
 
 ## Behavior notes
-- **Staleness guard:** if `sp500.json`'s last commit is older than 40 h, the run skips instead of posting a stale video.
+- **Freshness guard (scheduled runs only):** if `sp500.json`'s last commit is older than 18 h the scheduled run skips. Because `mapping.yml` only commits when data changes, a weekend / US holiday / stalled pipeline leaves the file ≥31 h old — so this prevents posting a duplicate recap of an unchanged close. Manual `workflow_dispatch` runs bypass the guard so you can always trigger one on demand.
 - **Graceful degradation:** any Finnhub failure just removes news slides; a Shotstack failure or upload failure fails the run loudly.
 - Quota: 1 upload = 1,600 + playlist add = 50 of YouTube's 10,000 daily units.
-- Test from the Actions tab: *Daily Recap Video → Run workflow → dry_run = true* builds the payload without rendering or uploading.
+- **Testing from the Actions tab** (*Daily Recap Video → Run workflow*):
+  - `dry_run = true` → builds the payload only, no render/upload.
+  - `dry_run = false`, `privacy = private` → full real run but the video lands **private** so you can verify it before making it public. Leave `privacy` blank to use `config.json`.
 - The n8n version of this pipeline (local, `D:\Claude\Automate`) produces identical videos and can stay as a manual backup.

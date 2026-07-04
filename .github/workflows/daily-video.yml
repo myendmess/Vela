@@ -9,6 +9,10 @@ on:
         description: 'Build the payload only — no render, no upload'
         required: false
         default: 'false'
+      privacy:
+        description: 'Override privacy for this run: public / unlisted / private. Blank = use config.json.'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -23,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          fetch-depth: 50   # staleness guard reads the data file's last commit date
+          fetch-depth: 50   # freshness guard reads the data file's last commit date
 
       - name: Build & publish daily recap Short
         env:
@@ -32,6 +36,8 @@ jobs:
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          SCHEDULED_RUN: ${{ github.event_name == 'schedule' }}
+          YT_PRIVACY: ${{ github.event.inputs.privacy }}
         run: |
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             node video/make_video.js --dry-run

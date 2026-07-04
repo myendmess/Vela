@@ -10,7 +10,6 @@
 // run stays green until secrets are configured. See video/README.md.
 
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 const { execSync } = require('child_process');
 const { buildPayload, pickMovers } = require('./payload');
@@ -20,7 +19,11 @@ const REPO_ROOT = path.join(__dirname, '..');
 const DATA_FILE = path.join(REPO_ROOT, 'mapping', 'dashboard', 'data', 'sp500.json');
 const DRY_RUN = process.argv.includes('--dry-run');
 const SHOTSTACK_BASE = 'https://api.shotstack.io/' + (cfg.shotstack_env || 'stage');
-const MAX_DATA_AGE_HOURS = 40; // sp500.json refreshes nightly at 23:00 UTC
+// sp500.json is committed ~23:00 UTC, ~7h before the 06:00 UTC run. mapping.yml
+// only commits when data changes, so a weekend / US holiday / stalled pipeline
+// leaves the file much older (>=31h) - the guard skips those so we never post a
+// duplicate recap of an unchanged close. Only enforced on scheduled runs.
+const MAX_DATA_AGE_HOURS = 18;
 
 const log = (...a) => console.log(new Date().toISOString().slice(11, 19), ...a);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -117,7 +120,11 @@ async function uploadToYouTube(videoBuf, meta, accessToken) {
     categoryId: '25',
     defaultLanguage: 'en'
   };
-  const status = { privacyStatus: 'public', selfDeclaredMadeForKids: false, embeddable: true };
+  const status = {
+    privacyStatus: process.env.YT_PRIVACY || cfg.privacy_status || 'public',
+    selfDeclaredMadeForKids: false,
+    embeddable: true
+  };
 
   const boundary = 'recap' + Date.now();
   const head = Buffer.from(
@@ -127,7 +134,8 @@ async function uploadToYouTube(videoBuf, meta, accessToken) {
   );
   const tail = Buffer.from(`\r\n--${boundary}--\r\n`);
 
-  const json = await jfetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=multipart&part=snippet,status', {
+  const notify = cfg.notify_subscribers === false ? 'false' : 'true';
+  const json = await jfetch('https://www.googleapis.com/upload/youtube/v3/videos?uploadType=multipart&part=snippet,status&notifySubscribers=' + notify, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + accessToken,
@@ -153,13 +161,12 @@ async function main() {
   const stocks = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
   log('Loaded', stocks.length, 'tickers from sp500.json');
 
-  if (!DRY_RUN) {
-    const age = dataAgeHours();
-    if (age !== null && age > MAX_DATA_AGE_HOURS) {
-      log(`SKIPPED: sp500.json is ${age.toFixed(0)}h old (> ${MAX_DATA_AGE_HOURS}h) - data pipeline probably didn't run. No video today.`);
-      return;
-    }
-    if (age !== null) log('Data age:', age.toFixed(1), 'hours - fresh.');
+  const enforceFreshness = !DRY_RUN && process.env.SCHEDULED_RUN === 'true';
+  const age = dataAgeHours();
+  if (age !== null) log('Data age:', age.toFixed(1), 'hours' + (enforceFreshness ? '' : ' (freshness guard off - manual/dry run)'));
+  if (enforceFreshness && age !== null && age > MAX_DATA_AGE_HOURS) {
+    log(`SKIPPED: sp500.json is ${age.toFixed(0)}h old (> ${MAX_DATA_AGE_HOURS}h) - last night's refresh produced no update (weekend / US holiday / stalled pipeline), so there's nothing new to recap. No video today.`);
+    return;
   }
 
   // 2. News

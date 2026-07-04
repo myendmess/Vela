@@ -5,6 +5,8 @@
   "sound_url": "https://shotstack-assets.s3.ap-southeast-2.amazonaws.com/music/unminus/palmtrees.mp3",
   "movers_with_news": 2,
   "general_headlines": 2,
-  "playlist_id": "",
+  "playlist_id": "PLL21YW0NJPng",
+  "privacy_status": "public",
+  "notify_subscribers": true,
   "shotstack_env": "stage"
 }
