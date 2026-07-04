@@ -77,11 +77,17 @@ const server = http.createServer(async (req, res) => {
 });
 
 function openBrowser(url) {
-  const cmd = process.platform === 'win32' ? ['cmd', ['/c', 'start', '', url]]
-    : process.platform === 'darwin' ? ['open', [url]]
-    : ['xdg-open', [url]];
   try {
-    spawn(cmd[0], cmd[1], { detached: true, stdio: 'ignore' }).unref();
+    if (process.platform === 'win32') {
+      // Use rundll32, NOT `cmd /c start`: cmd treats the '&' in the OAuth URL as a
+      // command separator and truncates it (dropping response_type/scope/redirect_uri).
+      // rundll32 receives the URL as a single literal argument - no re-parsing.
+      spawn('rundll32', ['url.dll,FileProtocolHandler', url], { detached: true, stdio: 'ignore' }).unref();
+    } else if (process.platform === 'darwin') {
+      spawn('open', [url], { detached: true, stdio: 'ignore' }).unref();
+    } else {
+      spawn('xdg-open', [url], { detached: true, stdio: 'ignore' }).unref();
+    }
     return true;
   } catch (e) {
     return false;
@@ -89,12 +95,11 @@ function openBrowser(url) {
 }
 
 server.listen(PORT, () => {
-  const opened = openBrowser(authUrl);
-  if (opened) {
-    console.log('A browser window is opening - sign in with the YouTube channel account and approve.');
-  } else {
-    console.log('Open this URL in your browser and sign in with the YouTube channel account:\n\n' + authUrl + '\n');
-  }
+  openBrowser(authUrl);
+  console.log('A browser tab should open automatically. If it does NOT, copy the full URL below');
+  console.log('(select it with the mouse, press Enter to copy) and paste it into your browser:\n');
+  console.log(authUrl + '\n');
+  console.log('Sign in with the YouTube channel account and approve.');
   console.log('Waiting for Google to redirect back to ' + REDIRECT + ' ...');
   console.log('IMPORTANT: do NOT press Ctrl+C in this terminal - it kills the script before the redirect arrives.');
 });
