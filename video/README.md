@@ -39,6 +39,20 @@ Everything tunable in `video/config.json`:
 
 Until all secrets are set, scheduled runs log `SKIPPED` and exit green — nothing breaks.
 
+## News selection (quality rules)
+- **General headlines:** market-keyword filtered, then only items **<24 h old**, ranked by
+  source quality (Reuters/Bloomberg/CNBC/etc. first) and recency; clickbait ("...?!") demoted.
+  If the feed has nothing fresh, falls back to the best unused older headline.
+- **Company headlines:** fetched since the previous trading day (4-day window on Tuesdays
+  to cover weekend news), newest first.
+- **No repeats, ever:** every headline shown is recorded in `video/state.json` (14-day
+  rolling window, committed back by the workflow) and excluded from future videos.
+
+## Failure alerts
+Any failed run automatically opens (or comments on) a GitHub Issue titled
+*"Daily video pipeline failed"* with a link to the log. Test it any time:
+*Run workflow → `simulate_failure = true`* — the run fails on purpose and the issue appears.
+
 ## Behavior notes
 - **Freshness guard (scheduled runs only):** if `sp500.json`'s last commit is older than 18 h the scheduled run skips. Because `mapping.yml` only commits when data changes, a weekend / US holiday / stalled pipeline leaves the file ≥31 h old — so this prevents posting a duplicate recap of an unchanged close. Manual `workflow_dispatch` runs bypass the guard so you can always trigger one on demand.
 - **Graceful degradation:** any Finnhub failure just removes news slides; a Shotstack failure or upload failure fails the run loudly.
