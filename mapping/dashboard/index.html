@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="dark" />
-  <title>Market Map — Global Heatmap</title>
+  <title>Vela — Market Map</title>
+  <link rel="icon" type="image/png" href="../../assets/favicon.png" />
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
   <style>
     :root{--bg:#0b0e14;--panel:#11151f;--line:#1e2533;--text:#e6edf3;--muted:#8b97a7;
@@ -16,6 +17,7 @@
     header{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;
       flex-wrap:wrap;align-items:center;gap:12px}
     h1{font-size:16px;margin:0;font-weight:700}h1 span{color:var(--accent)}
+    .logo{height:30px;width:auto;display:block;filter:drop-shadow(0 0 5px rgba(55,208,122,.45))}
     .crumb{font-size:12px;color:var(--muted)}
     .search{position:relative;width:210px}
     .search input{width:100%;background:var(--panel);border:1px solid var(--line);
@@ -63,6 +65,7 @@
 </head>
 <body>
   <header>
+    <a href="https://github.com/myendmess/Vela" target="_blank" rel="noopener" title="Vela"><img class="logo" src="../../assets/logo.png" alt="Vela" /></a>
     <h1>Market <span>Map</span></h1>
     <div class="crumb">Global Markets › Americas › USA ›</div>
     <div class="search"><input id="sin" type="text" placeholder="Search ticker or company…" autocomplete="off" /><div id="sdd" class="sdd"></div></div>

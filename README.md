@@ -1,4 +1,8 @@
-# Vela
+<p align="center">
+  <img src="assets/logo.png" alt="Vela" width="150">
+</p>
+
+<h1 align="center">Vela</h1>
 
 **Self-running S&P 500 intelligence — scanners, a live heatmap, and an auto-published daily YouTube Short. Total running cost: $0/month.**
 

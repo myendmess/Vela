@@ -243,8 +243,28 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
 
   slide({ len: 4, a: 'Explore the full\ninteractive heatmap', aSize: 54, b: cfg.site_label, bColor: ACCENT, bSize: 34, foot: false });
 
-  // ---- Assemble payload ----
+  // ---- Logo (optional; empty logo_url = no logo, nothing breaks) ----
+  const logoClips = [];
+  if (cfg.logo_url) {
+    // hero logo above the title on the intro slide
+    logoClips.push({
+      asset: { type: 'image', src: cfg.logo_url },
+      start: 0, length: 3,
+      position: 'center', offset: { x: 0, y: 0.26 }, scale: 0.34,
+      transition: { in: 'fade', out: 'fade' }
+    });
+    // small persistent corner mark for the rest of the video
+    logoClips.push({
+      asset: { type: 'image', src: cfg.logo_url },
+      start: 3, length: Math.max(t - 3, 0.1),
+      position: 'topLeft', offset: { x: 0.05, y: -0.05 }, scale: 0.12,
+      transition: { in: 'fade' }
+    });
+  }
+
+  // ---- Assemble payload (first track = top layer) ----
   const tracks = [
+    { clips: logoClips },
     { clips: heading },
     { clips: accent },
     { clips: bodyA },
