@@ -3,7 +3,7 @@
 </p>
 
 
-**Self-running S&P 500 intelligence — scanners, a live heatmap, and an auto-published daily YouTube Short. Total running cost: $0/month.**
+**Self-running S&P 500 intelligence scanners, a live heatmap, and an auto-published daily YouTube Short. Total running cost: $0/month.**
 
 
 <p align="center">
