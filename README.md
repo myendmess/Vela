@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/Vela_Icon.png" alt="Vela" width="150">
+  <img src="assets/Vela_Icon.png" alt="Vela — Global Market Synergy" width="600">
 </p>
 
 
