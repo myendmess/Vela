@@ -133,9 +133,23 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
   const usedHeadlines = new Set(usedEver); // dedupe within this run AND against past videos
   const consumed = [];                      // headlines this run actually puts on screen
 
-  function headlineFor(ticker) {
+  const escapeRe = s => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  // Finnhub tags generic wrap-ups with many tickers; a mover's slide must actually
+  // be ABOUT the company - otherwise the headline implies a false explanation for
+  // the move. Better no slide than a misleading one.
+  function mentionsCompany(n, ticker, name) {
+    const text = n.headline + ' ' + (n.summary || '');
+    if (new RegExp('\\b' + escapeRe(ticker) + '\\b').test(text)) return true;
+    const first = String(name || '').split(/[\s,.]+/)[0];
+    return !!(first && first.length > 2 && new RegExp('\\b' + escapeRe(first), 'i').test(text));
+  }
+
+  function headlineFor(m) {
     const matches = compNews
-      .filter(n => String(n.related).split(',').includes(ticker) && !usedHeadlines.has(n.headline))
+      .filter(n => String(n.related).split(',').includes(m.ticker)
+        && !usedHeadlines.has(n.headline)
+        && mentionsCompany(n, m.ticker, m.name))
       .sort((a, b) => (b.datetime || 0) - (a.datetime || 0));
     if (!matches.length) return null;
     usedHeadlines.add(matches[0].headline);
@@ -158,7 +172,7 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
 
   function tickerNewsSlides(side, color) {
     for (const m of moverList.filter(x => x.side === side)) {
-      const n = headlineFor(m.ticker);
+      const n = headlineFor(m);
       if (n) newsSlide(m.ticker + '  ' + fmt(m.move), color, n);
     }
   }
@@ -205,10 +219,26 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
 
   const genCountRaw = Number(cfg.general_headlines);
   const genCount = Number.isFinite(genCountRaw) && genCountRaw >= 0 ? genCountRaw : 2;
-  for (const n of news.filter(x => !usedHeadlines.has(x.headline)).slice(0, genCount)) {
+
+  // Topic diversity: two headlines sharing >=2 significant words are the same
+  // story from different outlets - show the best one and move on.
+  const STOP = new Set(['the', 'and', 'for', 'are', 'but', 'not', 'with', 'from', 'this', 'that',
+    'will', 'have', 'has', 'was', 'more', 'than', 'into', 'over', 'after', 'amid', 'says', 'say',
+    'said', 'new', 'its', 'their', 'how', 'why', 'what', 'stocks', 'stock', 'market', 'markets',
+    'shares', 'wall', 'street']);
+  const sigWords = h => new Set((String(h).toLowerCase().match(/[a-z0-9]{3,}/g) || []).filter(w => !STOP.has(w)));
+  const chosenTopics = [];
+  let shown = 0;
+  for (const n of news) {
+    if (shown >= genCount) break;
+    if (usedHeadlines.has(n.headline)) continue;
+    const words = sigWords(n.headline);
+    if (chosenTopics.some(ws => [...words].filter(x => ws.has(x)).length >= 2)) continue;
+    chosenTopics.push(words);
     usedHeadlines.add(n.headline);
     consumed.push(n.headline);
     newsSlide('IN THE NEWS', WHITE, n);
+    shown++;
   }
 
   slide({ len: 4, a: 'Explore the full\ninteractive heatmap', aSize: 54, b: cfg.site_label, bColor: ACCENT, bSize: 34, foot: false });
