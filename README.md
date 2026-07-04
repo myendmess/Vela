@@ -5,7 +5,6 @@
 
 **Self-running S&P 500 intelligence — scanners, a live heatmap, and an auto-published daily YouTube Short. Total running cost: $0/month.**
 
-*Named after the candlestick — the **vela** — that every chart it watches is made of.*
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/github/license/myendmess/Vela?color=blue"></a>
