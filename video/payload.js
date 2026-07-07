@@ -253,11 +253,12 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
       position: 'center', offset: { x: 0, y: 0.26 }, scale: 0.34,
       transition: { in: 'fade', out: 'fade' }
     });
-    // small persistent corner mark for the rest of the video
+    // small persistent corner mark for the rest of the video.
+    // topRight: Shotstack's stage watermark occupies the top-left/center band.
     logoClips.push({
       asset: { type: 'image', src: cfg.logo_url },
       start: 3, length: Math.max(t - 3, 0.1),
-      position: 'topLeft', offset: { x: 0.05, y: -0.05 }, scale: 0.12,
+      position: 'topRight', offset: { x: -0.05, y: -0.05 }, scale: 0.12,
       transition: { in: 'fade' }
     });
   }
