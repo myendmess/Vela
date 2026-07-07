@@ -254,11 +254,12 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
       transition: { in: 'fade', out: 'fade' }
     });
     // small persistent corner mark for the rest of the video.
-    // topRight: Shotstack's stage watermark occupies the top-left/center band.
+    // The Shotstack stage watermark ROAMS across the top ~8% band (seen at both
+    // top-left and top-right in real renders), so sit below the band entirely.
     logoClips.push({
       asset: { type: 'image', src: cfg.logo_url },
       start: 3, length: Math.max(t - 3, 0.1),
-      position: 'topRight', offset: { x: -0.05, y: -0.05 }, scale: 0.12,
+      position: 'topRight', offset: { x: -0.05, y: -0.13 }, scale: 0.12,
       transition: { in: 'fade' }
     });
   }
