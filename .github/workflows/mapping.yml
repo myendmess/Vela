@@ -32,6 +32,12 @@ jobs:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}   # optional 52-week fallback
         run: python mapping/scripts/build_sp500.py
 
+      - name: Build FTSE MIB dataset
+        # continue-on-error: a bad Yahoo day must not block the S&P commit;
+        # the builder itself refuses to write a half-empty file (<60% names).
+        continue-on-error: true
+        run: python mapping/scripts/build_ftsemib.py
+
       - name: Commit refreshed data
         run: |
           git config user.name "myendmess"

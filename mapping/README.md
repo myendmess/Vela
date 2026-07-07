@@ -93,3 +93,35 @@ expansion may stall on **data availability**, not code. Architected to scale reg
 - No build step / framework — plain HTML/CSS/JS + CDN libs (matches the portfolio's ethos).
 - Builders degrade gracefully: a missing key / failed source = partial data, never a crash.
 - One JSON dataset per index in `data/`; adding an index = new data file + un-grey its selector node.
+
+## Index registry & global rollout (v2, 2026-07-07)
+
+The dashboard is now **index-agnostic**: `?index=<id>` selects the dataset
+(`?index=ftse-mib`; default `sp500`, so the original URL is unchanged). The nav
+chips are generated from a small `INDEXES` registry in `dashboard/index.html`
+(label, data file, breadcrumb path, currency symbol).
+
+**Adding an index = three pieces, no app changes beyond one registry line:**
+1. `data/<index>_universe.csv` — hand-curated constituents (`ticker,yahoo,name,sector,sub_industry`).
+   Review after quarterly rebalances.
+2. `scripts/build_<index>.py` — emits `dashboard/data/<index>.json` in the exact
+   `sp500.json` schema (see `build_ftsemib.py` for the yfinance-based template;
+   refuses to overwrite good data if <60% of names build).
+3. One entry in the `INDEXES` registry + a step in `mapping.yml`.
+
+**Live so far:** `sp500` (NASDAQ APIs), `ftse-mib` (Yahoo via yfinance — Milan
+listings aren't on NASDAQ's endpoints; Stooq is the documented fallback if Yahoo
+sours on CI runners).
+
+**Candidate next indices** (all reachable with the same yfinance pattern):
+| Index | Universe source | Yahoo suffix |
+|---|---|---|
+| DAX 40 (Germany) | hand-curated, 40 names | `.DE` |
+| CAC 40 (France) | hand-curated, 40 names | `.PA` |
+| STOXX 600 (Europe) | large — needs a maintained constituents source first | mixed |
+| FTSE 100 (UK) | hand-curated, 100 names | `.L` |
+| Nikkei 225 (Japan) | hand-curated, 225 names | `.T` |
+| KOSPI (Korea) | availability spotty on free tiers | `.KS` |
+
+Longer-term: a landing hierarchy (Global Markets → Region → Country → Index)
+rendered from the registry, replacing the flat chip row once >4 indices exist.

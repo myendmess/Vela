@@ -47,16 +47,9 @@
     </a>
     <h1 class="text-[15px] font-bold m-0">Market <span class="text-amber-400">Map</span></h1>
 
-    <nav class="hidden md:block text-xs text-slate-500" aria-label="Index path">
-      Global Markets <span class="mx-1">›</span> Americas <span class="mx-1">›</span> USA
-      <span class="mx-1">›</span> <span class="text-slate-200 font-semibold">S&amp;P 500</span>
-    </nav>
+    <nav id="crumbs" class="hidden md:block text-xs text-slate-500" aria-label="Index path"></nav>
 
-    <div class="flex items-center gap-2" role="group" aria-label="Indices">
-      <span class="text-[11px] px-3 py-1 rounded-full bg-amber-400 text-[#0c0d12] font-bold">S&amp;P 500</span>
-      <span class="text-[11px] px-3 py-1 rounded-full border border-amber-400/40 text-amber-300/80 cursor-default"
-            title="FTSE MIB — coming soon">FTSE MIB <span class="opacity-70">· Coming Soon</span></span>
-    </div>
+    <div id="chips" class="flex items-center gap-2" role="group" aria-label="Indices"></div>
 
     <label class="flex items-center gap-1.5 text-[11px] text-slate-500">
       Color by
@@ -165,7 +158,7 @@
     function colorPos(p){if(p==null)return '#2a2e39';
       const c=p<0.5?lerp(C_DOWN,C_MID,p/0.5):lerp(C_MID,C_UP,(p-0.5)/0.5);return `rgb(${c[0]},${c[1]},${c[2]})`;}
 
-    const fmtB=v=>'$'+(v/1e9).toFixed(v>=1e11?0:1)+'B';
+    const fmtB=v=>CUR+(v/1e9).toFixed(v>=1e11?0:1)+'B';
     const gainFromLow=r=>(r.price&&r.wk52_low>0)?(r.price-r.wk52_low)/r.wk52_low*100:null;
     const metricVal=s=>metric==='low'?gainFromLow(s):(s.perf?s.perf[metric]:null);
     const metricColor=s=>metric==='low'?colorPos(s.wk52_position):colorRet(metricVal(s),METRICS[metric].range);
@@ -207,7 +200,7 @@
       document.getElementById('sb-tv').href=tvURL(s.ticker);
       document.getElementById('sb-name').textContent=s.name;
       document.getElementById('sb-class').textContent=`${s.gics_sector} · ${s.gics_sub_industry}`;
-      document.getElementById('sb-price').textContent=s.price!=null?'$'+s.price.toFixed(2):'—';
+      document.getElementById('sb-price').textContent=s.price!=null?CUR+s.price.toFixed(2):'—';
       const v=metricVal(s),chg=document.getElementById('sb-chg');
       chg.textContent=pctStr(v);chg.style.color=pctColor(v);
       document.getElementById('sb-spark').innerHTML=sparkSVG(s.spark,110,28);
@@ -259,7 +252,7 @@
       const lo=document.getElementById('lg-lo'),hi=document.getElementById('lg-hi');
       if(metric==='low'){lo.textContent='52w low';hi.textContent='52w high';}
       else{const r=METRICS[metric].range;lo.textContent='−'+r+'%';hi.textContent='+'+r+'%';}
-      document.getElementById('status').textContent=`S&P 500 · ${RAW.length} names · color = ${METRICS[metric].label}`;
+      document.getElementById('status').textContent=`${INDEX.label} · ${RAW.length} names · color = ${METRICS[metric].label}`;
     }
     function refresh(){
       if(chart)chart.setOption({series:[{data:buildTree(RAW)}]});
@@ -278,9 +271,33 @@
         {itemStyle:{borderColor:'#0c0d12',borderWidth:2,gapWidth:2}},{itemStyle:{borderWidth:1,gapWidth:1}}],
       breadcrumb:{show:true,bottom:6,itemStyle:{color:'#131722'},textStyle:{color:'#8b97a7'}}};
 
+    // ---------- index registry (Global Markets -> Region -> Country -> Index) ----------
+    // One app, many indices: ?index=<id> picks the dataset; default = sp500 so the
+    // original URL keeps working. Adding an index = one universe CSV + one builder
+    // + one entry here (see mapping/README.md roadmap).
+    const INDEXES={
+      'sp500':   {file:'data/sp500.json',  label:'S&P 500',  path:['Global Markets','Americas','USA'],   cur:'$'},
+      'ftse-mib':{file:'data/ftsemib.json',label:'FTSE MIB', path:['Global Markets','Europe','Italy'],   cur:'€'}
+    };
+    const COMING_SOON=['DAX 40','STOXX 600','Nikkei 225'];
+    const INDEX_ID=(()=>{const q=(new URLSearchParams(location.search).get('index')||'sp500').toLowerCase();
+      return INDEXES[q]?q:'sp500';})();
+    const INDEX=INDEXES[INDEX_ID];
+    const CUR=INDEX.cur;
+    document.title=`Vela — ${INDEX.label} Map`;
+    document.getElementById('crumbs').innerHTML=
+      INDEX.path.map(p=>`${p} <span class="mx-1">›</span>`).join('')+
+      `<span class="text-slate-200 font-semibold">${INDEX.label}</span>`;
+    document.getElementById('chips').innerHTML=
+      Object.entries(INDEXES).map(([id,ix])=>id===INDEX_ID
+        ?`<span class="text-[11px] px-3 py-1 rounded-full bg-amber-400 text-[#0c0d12] font-bold">${ix.label}</span>`
+        :`<a href="?index=${id}" class="text-[11px] px-3 py-1 rounded-full border border-amber-400/60 text-amber-300 hover:bg-amber-400 hover:text-[#0c0d12] transition-colors font-semibold">${ix.label}</a>`
+      ).join('')+
+      `<span class="hidden lg:inline text-[11px] px-3 py-1 rounded-full border border-[#1e222d] text-slate-500 cursor-default" title="${COMING_SOON.join(', ')} — coming soon">+${COMING_SOON.length} · Coming Soon</span>`;
+
     // Daily cache-bust: data refreshes once a day, so a date-stamped URL keeps
     // browsers from serving yesterday's JSON without disabling caching entirely.
-    fetch('data/sp500.json?v='+new Date().toISOString().slice(0,10)).then(r=>r.json()).then(rows=>{
+    fetch(INDEX.file+'?v='+new Date().toISOString().slice(0,10)).then(r=>r.json()).then(rows=>{
       RAW=rows;
       chart=echarts.init(document.getElementById('map'),null,{renderer:'canvas'});
       chart.setOption({backgroundColor:'transparent',
@@ -289,7 +306,7 @@
           formatter:info=>{const d=info.data&&info.data._raw;
             if(!d)return `<b>${info.name}</b><br>${fmtB(info.value)}`;
             let html=`<b>${d.ticker}</b> — ${d.name}<br>`+
-              `<span style="color:#8b97a7">$${d.price} · 1D <span style="color:${pctColor(d.perf&&d.perf['1d'])}">${pctStr(d.perf&&d.perf['1d'])}</span></span>`;
+              `<span style="color:#8b97a7">${CUR}${d.price} · 1D <span style="color:${pctColor(d.perf&&d.perf['1d'])}">${pctStr(d.perf&&d.perf['1d'])}</span></span>`;
             if(metric!=='1d')html+=`<br><span style="color:#8b97a7">${METRICS[metric].label} ${pctStr(metricVal(d))}</span>`;
             return html+`<br><span style="color:#61708d;font-size:11px">click to inspect ↗</span>`;}},
         series:[Object.assign({},SERIES_BASE,{data:buildTree(rows)})]});

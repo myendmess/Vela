@@ -1,2 +1,3 @@
 requests>=2.31
 python-dotenv>=1.0   # load .env for local runs (no-op in CI)
+yfinance>=0.2.40     # FTSE MIB heatmap builder (Milan listings aren't on NASDAQ's APIs)
