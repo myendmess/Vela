@@ -3,8 +3,12 @@
 
 Same output schema as build_sp500.py (the web app is index-agnostic), different
 sources — Milan listings aren't on the NASDAQ APIs:
-1. Constituents + sector mapping -> mapping/data/ftsemib_universe.csv
-   (hand-maintained, ~40 names; review after quarterly index rebalances)
+1. Constituents -> Wikipedia's FTSE MIB table (self-updating: rebalances land
+   here within days). The committed ftsemib_universe.csv is a merged CACHE and
+   the automatic fallback when Wikipedia is unreachable/unparseable — known
+   tickers keep their curated sector labels, new entrants get ICB-derived ones,
+   departures are dropped, and the refreshed CSV is committed back by CI.
+   ZERO manual maintenance by design.
 2. Prices, ~1y history, market cap  -> Yahoo Finance via the `yfinance` library
    (keyless; handles Yahoo's crumb/cookie dance and polite pacing for us)
 
@@ -22,13 +26,16 @@ Output is mechanical market data for visualization — NOT financial advice.
 from __future__ import annotations
 
 import csv
+import html as html_mod
 import json
 import logging
 import os
+import re
 import time
 from datetime import timedelta
 from pathlib import Path
 
+import requests
 import yfinance as yf
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -43,16 +50,126 @@ UNIVERSE = ROOT / "data" / "ftsemib_universe.csv"
 OUT_PATH = ROOT / "dashboard" / "data" / "ftsemib.json"
 
 
-def get_universe() -> list[dict]:
+WIKI_URL = "https://en.wikipedia.org/wiki/FTSE_MIB"
+UA = {"User-Agent": "Mozilla/5.0 (VelaBot; market heatmap; github.com/myendmess/Vela)"}
+
+# Coarse ICB -> (sector, sub_industry) for NEW index entrants only; known
+# tickers keep their curated labels from the CSV. Unmapped ICB values pass
+# through as-is - the treemap just shows a new group, never crashes.
+# Keys = the exact ICB labels observed on the Wikipedia table (2026-07), plus
+# plausible variants. Unmapped values pass through as their own group.
+ICB_MAP = {
+    "Banks": ("Financials", "Banks"),
+    "Insurance": ("Financials", "Insurance"),
+    "Financial Services": ("Financials", "Diversified Financial Services"),
+    "Utilities": ("Utilities", "Multi-Utilities"),
+    "Health Care": ("Health Care", "Health Care"),
+    "Aerospace": ("Industrials", "Aerospace & Defense"),
+    "Aerospace & Defense": ("Industrials", "Aerospace & Defense"),
+    "Shipbuilding": ("Industrials", "Shipbuilding & Defense"),
+    "Automobiles and Parts": ("Consumer Discretionary", "Automobiles"),
+    "Automobiles": ("Consumer Discretionary", "Automobiles"),
+    "Technology": ("Information Technology", "Technology"),
+    "Telecommunications": ("Communication Services", "Telecom Services"),
+    "Energy": ("Energy", "Oil & Gas"),
+    "Oil & Gas": ("Energy", "Oil & Gas"),
+    "Basic Materials": ("Materials", "Materials"),
+    "Construction and Materials": ("Materials", "Construction Materials"),
+    "Consumer Products and Services": ("Consumer Discretionary", "Consumer Products"),
+    "Consumer Goods": ("Consumer Discretionary", "Consumer Goods"),
+    "Consumer Services": ("Consumer Discretionary", "Consumer Services"),
+    "Gambling": ("Consumer Discretionary", "Casinos & Gaming"),
+    "Industrials": ("Industrials", "Industrial Goods"),
+    "Industrial Goods and Services": ("Industrials", "Industrial Goods"),
+    "Food, Beverage and Tobacco": ("Consumer Staples", "Food & Beverage"),
+    "Food & Beverage": ("Consumer Staples", "Food & Beverage"),
+    "Retail": ("Consumer Discretionary", "Retail"),
+    "Media": ("Communication Services", "Media"),
+}
+
+_TAGS = re.compile(r"<[^>]+>")
+
+
+def _text(cell: str) -> str:
+    return html_mod.unescape(_TAGS.sub("", cell)).strip()
+
+
+def fetch_wiki_constituents() -> list[dict] | None:
+    """Current constituents from Wikipedia's table: [{yahoo, name, icb}]. None on any failure."""
+    try:
+        r = requests.get(WIKI_URL, headers=UA, timeout=30)
+        r.raise_for_status()
+        page = r.text.replace("\n", "")
+        out = []
+        for row in re.findall(r"<tr[^>]*>(.*?)</tr>", page):
+            tds = re.findall(r"<td[^>]*>(.*?)</td>", row)
+            if len(tds) < 3:
+                continue
+            m = re.fullmatch(r"([A-Z0-9]{1,6})\.MI", _text(tds[0]))
+            if not m:
+                continue
+            name = _text(tds[1])
+            icb = _text(tds[-1])
+            if name:
+                out.append({"yahoo": _text(tds[0]), "name": name, "icb": icb})
+        # sanity: a broken parse or vandalized page must not nuke the universe
+        if not 25 <= len(out) <= 60:
+            log.warning("Wikipedia parse gave %d rows - ignoring", len(out))
+            return None
+        return out
+    except Exception as e:  # noqa: BLE001
+        log.warning("Wikipedia constituents fetch failed: %s", e)
+        return None
+
+
+def _read_csv() -> list[dict]:
     with UNIVERSE.open(encoding="utf-8") as f:
-        rows = [
+        return [
             {"ticker": r["ticker"].strip(), "yahoo": r["yahoo"].strip(),
              "name": r["name"].strip(),
              "gics_sector": r["sector"].strip() or "Unknown",
              "gics_sub_industry": r["sub_industry"].strip() or "Other"}
             for r in csv.DictReader(f) if r.get("ticker")
         ]
-    log.info("Universe: %d names", len(rows))
+
+
+def get_universe() -> list[dict]:
+    """Wikipedia-refreshed constituents, merged with the curated CSV cache.
+
+    Wikipedia down/unparseable -> committed CSV as-is (graceful). Otherwise the
+    CSV is rewritten to mirror the live index and gets committed by the workflow.
+    """
+    cached = {r["ticker"]: r for r in _read_csv()}
+    wiki = fetch_wiki_constituents()
+    if wiki is None:
+        rows = list(cached.values())
+        log.info("Universe (CSV fallback): %d names", len(rows))
+        return rows
+
+    rows, added = [], []
+    for w in wiki:
+        tkr = w["yahoo"].removesuffix(".MI")
+        if tkr in cached:
+            rows.append(cached[tkr])           # keep curated labels
+        else:
+            sec, sub = ICB_MAP.get(w["icb"], (w["icb"] or "Other", w["icb"] or "Other"))
+            rows.append({"ticker": tkr, "yahoo": w["yahoo"], "name": w["name"],
+                         "gics_sector": sec, "gics_sub_industry": sub})
+            added.append(tkr)
+    removed = sorted(set(cached) - {r["ticker"] for r in rows})
+    if added:
+        log.info("Index rebalance - added: %s", ", ".join(added))
+    if removed:
+        log.info("Index rebalance - removed: %s", ", ".join(removed))
+
+    rows.sort(key=lambda r: r["ticker"])
+    with UNIVERSE.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["ticker", "yahoo", "name", "sector", "sub_industry"])
+        for r in rows:
+            w.writerow([r["ticker"], r["yahoo"], r["name"],
+                        r["gics_sector"], r["gics_sub_industry"]])
+    log.info("Universe (Wikipedia-refreshed): %d names", len(rows))
     return rows
 
 

@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  issues: write     # failure alerts
 
 concurrency:
   group: scan-longterm
@@ -46,4 +47,19 @@ jobs:
           else
             git commit -m "chore: long-term scan $(date -u +%Y-%m-%d)"
             git push
+          fi
+
+      - name: Open issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Long-term scan pipeline failed"
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          body="Run failed on $(date -u '+%Y-%m-%d %H:%M UTC'). Log: $run_url"
+          existing=$(gh issue list --repo "${{ github.repository }}" --state open --search "in:title \"$title\"" --json number --jq '.[0].number' || true)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --repo "${{ github.repository }}" --body "$body"
+          else
+            gh issue create --repo "${{ github.repository }}" --title "$title" --body "$body"
           fi

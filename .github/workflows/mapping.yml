@@ -9,6 +9,7 @@ on:
 # (Settings → Pages → Deploy from a branch → main / root).
 permissions:
   contents: write
+  issues: write     # failure alerts
 
 concurrency:
   group: market-map
@@ -35,17 +36,35 @@ jobs:
       - name: Build FTSE MIB dataset
         # continue-on-error: a bad Yahoo day must not block the S&P commit;
         # the builder itself refuses to write a half-empty file (<60% names).
+        id: mib
         continue-on-error: true
         run: python mapping/scripts/build_ftsemib.py
 
       - name: Commit refreshed data
+        # mapping/data/ too: the FTSE MIB universe CSV self-updates from Wikipedia
         run: |
           git config user.name "myendmess"
           git config user.email "boujnanemohamed23@gmail.com"
-          git add mapping/dashboard/data/
+          git add mapping/dashboard/data/ mapping/data/
           if git diff --staged --quiet; then
             echo "No data change to commit."
           else
             git commit -m "chore: refresh market map data $(date -u +%Y-%m-%d)"
+            git pull --rebase
             git push
+          fi
+
+      - name: Open issue on failure
+        if: failure() || steps.mib.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Market Map pipeline failed"
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          body="Run failed on $(date -u '+%Y-%m-%d %H:%M UTC') (FTSE MIB step: ${{ steps.mib.outcome }}). Log: $run_url"
+          existing=$(gh issue list --repo "${{ github.repository }}" --state open --search "in:title \"$title\"" --json number --jq '.[0].number' || true)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --repo "${{ github.repository }}" --body "$body"
+          else
+            gh issue create --repo "${{ github.repository }}" --title "$title" --body "$body"
           fi

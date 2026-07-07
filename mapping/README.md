@@ -102,8 +102,11 @@ chips are generated from a small `INDEXES` registry in `dashboard/index.html`
 (label, data file, breadcrumb path, currency symbol).
 
 **Adding an index = three pieces, no app changes beyond one registry line:**
-1. `data/<index>_universe.csv` — hand-curated constituents (`ticker,yahoo,name,sector,sub_industry`).
-   Review after quarterly rebalances.
+1. `data/<index>_universe.csv` — constituents (`ticker,yahoo,name,sector,sub_industry`).
+   For FTSE MIB this is a **self-updating cache**: the builder refreshes it from
+   Wikipedia's constituents table every run (rebalances land automatically;
+   Wikipedia unreachable = committed CSV fallback). Zero manual maintenance.
+
 2. `scripts/build_<index>.py` — emits `dashboard/data/<index>.json` in the exact
    `sp500.json` schema (see `build_ftsemib.py` for the yfinance-based template;
    refuses to overwrite good data if <60% of names build).
@@ -111,7 +114,8 @@ chips are generated from a small `INDEXES` registry in `dashboard/index.html`
 
 **Live so far:** `sp500` (NASDAQ APIs), `ftse-mib` (Yahoo via yfinance — Milan
 listings aren't on NASDAQ's endpoints; Stooq is the documented fallback if Yahoo
-sours on CI runners).
+sours on CI runners). All three pipelines (mapping + both scanners) open a
+GitHub Issue automatically on failure — silent breakage is designed out.
 
 **Candidate next indices** (all reachable with the same yfinance pattern):
 | Index | Universe source | Yahoo suffix |
