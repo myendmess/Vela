@@ -1,41 +1,41 @@
 ticker,yahoo,name,sector,sub_industry
 A2A,A2A.MI,A2A,Utilities,Multi-Utilities
 AMP,AMP.MI,Amplifon,Health Care,Health Care Providers
+AVIO,AVIO.MI,Avio,Industrials,Aerospace & Defense
 AZM,AZM.MI,Azimut Holding,Financials,Asset Management
 BAMI,BAMI.MI,Banco BPM,Financials,Banks
+BC,BC.MI,Brunello Cucinelli,Consumer Discretionary,Luxury Goods
 BMED,BMED.MI,Banca Mediolanum,Financials,Diversified Financial Services
 BMPS,BMPS.MI,Banca Monte dei Paschi,Financials,Banks
 BPE,BPE.MI,BPER Banca,Financials,Banks
-BC,BC.MI,Brunello Cucinelli,Consumer Discretionary,Luxury Goods
 BZU,BZU.MI,Buzzi,Materials,Construction Materials
 CPR,CPR.MI,Davide Campari,Consumer Staples,Beverages
 DIA,DIA.MI,DiaSorin,Health Care,Diagnostics & Research
 ENEL,ENEL.MI,Enel,Utilities,Electric Utilities
 ENI,ENI.MI,Eni,Energy,Integrated Oil & Gas
-RACE,RACE.MI,Ferrari,Consumer Discretionary,Automobiles
 FBK,FBK.MI,FinecoBank,Financials,Banks
+FCT,FCT.MI,Fincantieri,Industrials,Shipbuilding & Defense
 G,G.MI,Assicurazioni Generali,Financials,Insurance
 HER,HER.MI,Hera,Utilities,Multi-Utilities
-ISP,ISP.MI,Intesa Sanpaolo,Financials,Banks
-INW,INW.MI,Infrastrutture Wireless Italiane,Communication Services,Telecom Infrastructure
 IG,IG.MI,Italgas,Utilities,Gas Utilities
+INW,INW.MI,Infrastrutture Wireless Italiane,Communication Services,Telecom Infrastructure
+ISP,ISP.MI,Intesa Sanpaolo,Financials,Banks
 IVG,IVG.MI,Iveco Group,Industrials,Trucks & Heavy Machinery
 LDO,LDO.MI,Leonardo,Industrials,Aerospace & Defense
 LTMC,LTMC.MI,Lottomatica Group,Consumer Discretionary,Casinos & Gaming
 MB,MB.MI,Mediobanca,Financials,Banks
 MONC,MONC.MI,Moncler,Consumer Discretionary,Luxury Goods
 NEXI,NEXI.MI,Nexi,Financials,Payment Services
-PST,PST.MI,Poste Italiane,Financials,Insurance & Postal Services
 PRY,PRY.MI,Prysmian,Industrials,Electrical Equipment
+PST,PST.MI,Poste Italiane,Financials,Insurance & Postal Services
+RACE,RACE.MI,Ferrari,Consumer Discretionary,Automobiles
 REC,REC.MI,Recordati,Health Care,Pharmaceuticals
 SPM,SPM.MI,Saipem,Energy,Oil & Gas Services
 SRG,SRG.MI,Snam,Utilities,Gas Utilities
 STLAM,STLAM.MI,Stellantis,Consumer Discretionary,Automobiles
 STMMI,STMMI.MI,STMicroelectronics,Information Technology,Semiconductors
-TIT,TIT.MI,Telecom Italia,Communication Services,Telecom Services
 TEN,TEN.MI,Tenaris,Energy,Oil & Gas Equipment
+TIT,TIT.MI,Telecom Italia,Communication Services,Telecom Services
 TRN,TRN.MI,Terna,Utilities,Electric Utilities
 UCG,UCG.MI,UniCredit,Financials,Banks
 UNI,UNI.MI,Unipol Assicurazioni,Financials,Insurance
-AVIO,AVIO.MI,Avio,Industrials,Aerospace & Defense
-FCT,FCT.MI,Fincantieri,Industrials,Shipbuilding & Defense
