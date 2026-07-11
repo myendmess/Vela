@@ -1,0 +1,19 @@
+{
+  "sp500":     { "label": "S&P 500",            "status": "live", "scope": { "type": "country", "code": "US" },
+                 "file": "data/sp500.json",   "path": ["Global Markets", "Americas", "USA"],   "cur": "$" },
+  "nasdaq100": { "label": "NASDAQ 100",         "status": "soon", "scope": { "type": "country", "code": "US" } },
+  "ftse-mib":  { "label": "FTSE MIB",           "status": "live", "scope": { "type": "country", "code": "IT" },
+                 "file": "data/ftsemib.json", "path": ["Global Markets", "Europe", "Italy"],   "cur": "€" },
+  "tsx":       { "label": "S&P/TSX Composite",  "status": "soon", "scope": { "type": "country", "code": "CA" } },
+  "dax":       { "label": "DAX 40",             "status": "soon", "scope": { "type": "country", "code": "DE" } },
+  "cac40":     { "label": "CAC 40",             "status": "soon", "scope": { "type": "country", "code": "FR" } },
+  "ftse100":   { "label": "FTSE 100",           "status": "soon", "scope": { "type": "country", "code": "GB" } },
+  "csi300":    { "label": "CSI 300",            "status": "soon", "scope": { "type": "country", "code": "CN" } },
+  "taiex":     { "label": "TAIEX",              "status": "soon", "scope": { "type": "country", "code": "TW" } },
+  "nikkei225": { "label": "Nikkei 225",         "status": "soon", "scope": { "type": "country", "code": "JP" } },
+  "kospi":     { "label": "KOSPI",              "status": "soon", "scope": { "type": "country", "code": "KR" } },
+  "stoxx600":  { "label": "STOXX 600",          "status": "soon", "scope": { "type": "region", "code": "EU",
+                 "countries": ["AT","BE","CH","DE","DK","ES","FI","FR","GB","IE","IT","LU","NL","NO","PL","PT","SE"] } },
+  "vwce":      { "label": "VWCE · FTSE All-World", "status": "soon", "scope": { "type": "world" },
+                 "weights": "data/vwce.json" }
+}

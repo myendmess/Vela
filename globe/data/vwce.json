@@ -1,0 +1,13 @@
+{
+  "as_of": "2026-05-31",
+  "source": "justETF profile IE00B3RBWM25 (US/JP/TW/KR exact) + FTSE All-World factsheet approximations for the remainder — hand-seeded, review quarterly",
+  "weights": {
+    "US": 56.87, "JP": 5.59, "TW": 3.2, "KR": 2.84,
+    "GB": 3.1, "CN": 2.8, "CA": 2.5, "FR": 2.2, "DE": 2.2, "IN": 2.1, "CH": 1.9, "AU": 1.7,
+    "NL": 1.0, "SE": 0.8, "IT": 0.7, "ES": 0.7, "HK": 0.7, "DK": 0.6, "SA": 0.45, "BR": 0.4,
+    "SG": 0.4, "ZA": 0.35, "BE": 0.3, "FI": 0.3, "IE": 0.3, "IL": 0.2, "MX": 0.2, "ID": 0.2,
+    "TH": 0.2, "NO": 0.2, "MY": 0.15, "AE": 0.15, "PL": 0.1, "QA": 0.1, "KW": 0.1, "NZ": 0.1,
+    "TR": 0.05, "AT": 0.05, "PT": 0.05, "GR": 0.05, "CL": 0.05, "PH": 0.05, "HU": 0.03,
+    "CZ": 0.02, "EG": 0.02, "PE": 0.02, "CO": 0.02
+  }
+}
