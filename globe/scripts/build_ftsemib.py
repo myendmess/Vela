@@ -12,7 +12,7 @@ sources — Milan listings aren't on the NASDAQ APIs:
 2. Prices, ~1y history, market cap  -> Yahoo Finance via the `yfinance` library
    (keyless; handles Yahoo's crumb/cookie dance and polite pacing for us)
 
-Writes ``mapping/dashboard/data/ftsemib.json`` — flat array grouped by the web
+Writes ``globe/dashboard/data/ftsemib.json`` — flat array grouped by the web
 app as Sector -> Sub-Industry -> Stock. Degrades gracefully: a failed ticker is
 skipped (logged), never a crashed build.
 

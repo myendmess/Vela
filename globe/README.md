@@ -1,6 +1,6 @@
-# Mapping — interactive global market heatmap
+# Globe — interactive global market heatmap
 
-Everything for the market-map / dashboard project lives in this folder (`mapping/`).
+Everything for the market-map / dashboard project lives in this folder (`globe/`).
 It is **not** a separate repo — just the self-contained project home inside Vela,
 a sibling of `reports/`.
 
@@ -64,20 +64,33 @@ near-EOD snapshot (same freshness finviz free gives).
 
 ## Internal layout
 ```
-mapping/
+globe/
+├─ indexes.json # SHARED registry: every dataset + its scope (country/region/world) + status
 ├─ scripts/     # batch builders: fetch universe -> data/*.json (Python, rate-limited)
-├─ data/        # generated datasets, e.g. sp500.json (one file per index)
+├─ data/        # generated datasets (one file per index) + vwce.json (hand-seeded weights)
+├─ index.html   # 3D globe landing page (MapLibre GL JS): click a region -> dashboard/?index=<id>
 └─ dashboard/   # the static web app: index.html + JS (ECharts via CDN) + assets
 ```
+`globe/index.html` needs **no API key**: the globe is MapLibre GL JS (open source)
+and the country shapes are public-domain Natural Earth data fetched at runtime from
+unpkg's CDN (`world-atlas` package); if that download fails the page degrades to an
+on-page notice + a direct link to `dashboard/`.
+
+**`indexes.json` is the single source of truth** for both pages — no manual sync.
+Each entry has a `scope`: `country` (S&P 500 → US), `region` (STOXX 600 → member
+country list, hover-highlighted as one group), or `world` (VWCE → the 🌍 toggle
+colors every country by its `data/vwce.json` allocation weight, √-scaled). Countries
+with several associated indices get a click picker (live = link, soon = greyed);
+`file`/`path`/`cur` fields are only needed once an entry goes `live`.
 
 ## Build & deploy
 - **Hosting:** GitHub Pages, **Deploy from a branch** (`main` / root). The repo-root
-  `index.html` redirects `…/Vela/` → `…/Vela/mapping/dashboard/`; `.nojekyll`
+  `index.html` redirects `…/Vela/` → `…/Vela/globe/dashboard/`; `.nojekyll`
   serves files as-is. Live: **https://myendmess.github.io/Vela/**.
 - **Builder:** `scripts/build_sp500.py` → writes `dashboard/data/sp500.json`. Runs in CI
   (Python 3.11). Env: `RATE_SLEEP`, `LIMIT` (cap symbols for testing), `FINNHUB_API_KEY`
   (optional 52-week fallback). No local Python on the dev box — verify via CI.
-- **Workflow:** `.github/workflows/mapping.yml` (schedule `0 23 * * 1-5` + `workflow_dispatch`)
+- **Workflow:** `.github/workflows/globe.yml` (schedule `0 23 * * 1-5` + `workflow_dispatch`)
   rebuilds the data and commits it to `main`; branch-deploy auto-republishes. (No Pages-deploy
   steps — that's only for the "GitHub Actions" source, which we are not using.)
 - **Portfolio integration:** link/embed the live URL from the portfolio (a Projects card /
@@ -98,8 +111,9 @@ expansion may stall on **data availability**, not code. Architected to scale reg
 
 The dashboard is now **index-agnostic**: `?index=<id>` selects the dataset
 (`?index=ftse-mib`; default `sp500`, so the original URL is unchanged). The nav
-chips are generated from a small `INDEXES` registry in `dashboard/index.html`
-(label, data file, breadcrumb path, currency symbol).
+chips, breadcrumbs, and the globe's highlights are ALL generated from the shared
+`globe/indexes.json` registry (label, status, scope; live entries add data file,
+breadcrumb path, currency symbol).
 
 **Adding an index = three pieces, no app changes beyond one registry line:**
 1. `data/<index>_universe.csv` — constituents (`ticker,yahoo,name,sector,sub_industry`).
@@ -110,11 +124,12 @@ chips are generated from a small `INDEXES` registry in `dashboard/index.html`
 2. `scripts/build_<index>.py` — emits `dashboard/data/<index>.json` in the exact
    `sp500.json` schema (see `build_ftsemib.py` for the yfinance-based template;
    refuses to overwrite good data if <60% of names build).
-3. One entry in the `INDEXES` registry + a step in `mapping.yml`.
+3. Flip the entry's `status` to `"live"` in `globe/indexes.json` (adding
+   `file`/`path`/`cur`) + a step in `globe.yml`. Both pages pick it up.
 
 **Live so far:** `sp500` (NASDAQ APIs), `ftse-mib` (Yahoo via yfinance — Milan
 listings aren't on NASDAQ's endpoints; Stooq is the documented fallback if Yahoo
-sours on CI runners). All three pipelines (mapping + both scanners) open a
+sours on CI runners). All three pipelines (globe + both scanners) open a
 GitHub Issue automatically on failure — silent breakage is designed out.
 
 **Candidate next indices** (all reachable with the same yfinance pattern):

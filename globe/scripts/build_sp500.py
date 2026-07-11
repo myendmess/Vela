@@ -8,7 +8,7 @@ Pipeline (all free tier; sources validated 2026-06-28):
    From the history we derive: latest price, 52-week close range + position,
    seven period returns (1D/1W/1M/3M/6M/1Y/MTD), and a downsampled sparkline.
 
-Writes ``mapping/dashboard/data/sp500.json`` — a flat array the web app groups
+Writes ``globe/dashboard/data/sp500.json`` — a flat array the web app groups
 Sector -> Sub-Industry -> Stock. Degrades gracefully: no market cap or no chart -> skip.
 
 Env vars:

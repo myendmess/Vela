@@ -16,10 +16,10 @@ const { buildPayload, pickMovers } = require('./payload');
 
 const cfg = require('./config.json');
 const REPO_ROOT = path.join(__dirname, '..');
-const DATA_FILE = path.join(REPO_ROOT, 'mapping', 'dashboard', 'data', 'sp500.json');
+const DATA_FILE = path.join(REPO_ROOT, 'globe', 'dashboard', 'data', 'sp500.json');
 const DRY_RUN = process.argv.includes('--dry-run');
 const SHOTSTACK_BASE = 'https://api.shotstack.io/' + (cfg.shotstack_env || 'stage');
-// sp500.json is committed ~23:00 UTC, ~7h before the 06:00 UTC run. mapping.yml
+// sp500.json is committed ~23:00 UTC, ~7h before the 06:00 UTC run. globe.yml
 // only commits when data changes, so a weekend / US holiday / stalled pipeline
 // leaves the file much older (>=31h) - the guard skips those so we never post a
 // duplicate recap of an unchanged close. Only enforced on scheduled runs.
@@ -55,7 +55,7 @@ async function jfetch(url, opts, what) {
 // hours since the data file's last commit; null if unknown (shallow clone, no git)
 function dataAgeHours() {
   try {
-    const ct = execSync('git log -1 --format=%ct -- "mapping/dashboard/data/sp500.json"', {
+    const ct = execSync('git log -1 --format=%ct -- "globe/dashboard/data/sp500.json"', {
       cwd: REPO_ROOT, stdio: ['ignore', 'pipe', 'ignore']
     }).toString().trim();
     return ct ? (Date.now() / 1000 - Number(ct)) / 3600 : null;

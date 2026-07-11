@@ -23,7 +23,7 @@ solo-maintained portfolio project, so expect friendly but not instant reviews.
 | Area | Language / runtime | Where it runs | Docs |
 |---|---|---|---|
 | Scanners (`scripts/`) | Python 3.11, `requests` | GitHub Actions | [README](README.md) |
-| Heatmap (`mapping/`) | Python builder + static ECharts page | Actions + GitHub Pages | [`mapping/README.md`](mapping/README.md) |
+| Heatmap (`globe/`) | Python builder + static ECharts page | Actions + GitHub Pages | [`globe/README.md`](globe/README.md) |
 | Daily video (`video/`) | Node 18+, **zero npm dependencies** | GitHub Actions | [`video/README.md`](video/README.md) |
 
 ## Developing & testing

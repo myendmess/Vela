@@ -31,21 +31,21 @@ jobs:
       - name: Build S&P 500 dataset
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}   # optional 52-week fallback
-        run: python mapping/scripts/build_sp500.py
+        run: python globe/scripts/build_sp500.py
 
       - name: Build FTSE MIB dataset
         # continue-on-error: a bad Yahoo day must not block the S&P commit;
         # the builder itself refuses to write a half-empty file (<60% names).
         id: mib
         continue-on-error: true
-        run: python mapping/scripts/build_ftsemib.py
+        run: python globe/scripts/build_ftsemib.py
 
       - name: Commit refreshed data
-        # mapping/data/ too: the FTSE MIB universe CSV self-updates from Wikipedia
+        # globe/data/ too: the FTSE MIB universe CSV self-updates from Wikipedia
         run: |
           git config user.name "myendmess"
           git config user.email "boujnanemohamed23@gmail.com"
-          git add mapping/dashboard/data/ mapping/data/
+          git add globe/dashboard/data/ globe/data/
           if git diff --staged --quiet; then
             echo "No data change to commit."
           else

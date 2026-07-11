@@ -1,6 +1,6 @@
 # video/ — daily S&P 500 recap Short (YouTube)
 
-Third pipeline: turns `mapping/dashboard/data/sp500.json` + Finnhub headlines into a
+Third pipeline: turns `globe/dashboard/data/sp500.json` + Finnhub headlines into a
 ~50–75s vertical video (Shotstack) and publishes it to YouTube as a Short, every
 trading morning. Zero npm dependencies — plain Node 18+.
 
@@ -54,7 +54,7 @@ Any failed run automatically opens (or comments on) a GitHub Issue titled
 *Run workflow → `simulate_failure = true`* — the run fails on purpose and the issue appears.
 
 ## Behavior notes
-- **Freshness guard (scheduled runs only):** if `sp500.json`'s last commit is older than 18 h the scheduled run skips. Because `mapping.yml` only commits when data changes, a weekend / US holiday / stalled pipeline leaves the file ≥31 h old — so this prevents posting a duplicate recap of an unchanged close. Manual `workflow_dispatch` runs bypass the guard so you can always trigger one on demand.
+- **Freshness guard (scheduled runs only):** if `sp500.json`'s last commit is older than 18 h the scheduled run skips. Because `globe.yml` only commits when data changes, a weekend / US holiday / stalled pipeline leaves the file ≥31 h old — so this prevents posting a duplicate recap of an unchanged close. Manual `workflow_dispatch` runs bypass the guard so you can always trigger one on demand.
 - **Graceful degradation:** any Finnhub failure just removes news slides; a Shotstack failure or upload failure fails the run loudly.
 - Quota: 1 upload = 1,600 + playlist add = 50 of YouTube's 10,000 daily units.
 - **Testing from the Actions tab** (*Daily Recap Video → Run workflow*):
