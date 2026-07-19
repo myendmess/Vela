@@ -1,0 +1,60 @@
+[
+  {
+    "headline": "Fed officials signal September rate cut as inflation cools further",
+    "summary": "Policymakers pointed to easing price pressures across markets.",
+    "source": "Reuters",
+    "datetime": 1784232000
+  },
+  {
+    "headline": "Fed signals September rate cut amid cooling inflation data",
+    "summary": "A second outlet reports the same story.",
+    "source": "CNBC",
+    "datetime": 1784235600
+  },
+  {
+    "headline": "Treasury yields slide as bond traders price in earlier easing",
+    "summary": "The 10-year yield fell for a third session.",
+    "source": "Bloomberg",
+    "datetime": 1784224800
+  },
+  {
+    "headline": "Oil prices climb after OPEC output surprise",
+    "summary": "Crude gained on the supply news.",
+    "source": "PetroDaily",
+    "datetime": 1784239200
+  },
+  {
+    "headline": "Is the stock market about to crash?",
+    "summary": "Some strategists urge caution on equities.",
+    "source": "MarketWatch",
+    "datetime": 1784246400
+  },
+  {
+    "headline": "Celebrity chef opens rooftop restaurant in Paris",
+    "summary": "The tasting menu debuts next month.",
+    "source": "Associated Press",
+    "datetime": 1784250000
+  },
+  {
+    "headline": "Wall Street ends mixed as earnings season kicks off",
+    "summary": "Banks led while tech lagged.",
+    "source": "Reuters",
+    "datetime": 1784052000
+  },
+  {
+    "headline": "Dollar steadies as traders await GDP data",
+    "summary": "Currency markets were calm ahead of the release.",
+    "source": "Reuters",
+    "datetime": 1784242800
+  },
+  {
+    "headline": "Chipmakers rally on strong semiconductor demand outlook",
+    "summary": "Foundry orders point to a robust second half.",
+    "source": "Bloomberg",
+    "datetime": 1784228400
+  },
+  {
+    "summary": "item with no headline - must be ignored"
+  },
+  null
+]

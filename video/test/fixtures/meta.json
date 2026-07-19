@@ -1,0 +1,6 @@
+{
+  "frozen_now": "2026-07-17T06:00:00.000Z",
+  "node_version": "v24.18.0",
+  "captured": "2026-07-19",
+  "note": "sp500 fixture = repo sp500.json hand-augmented for branch coverage; news fixtures synthesized (no API key) per framework B2. Fixtures are immutable; changes require a deliberate golden regeneration."
+}

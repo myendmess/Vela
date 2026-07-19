@@ -1,0 +1,30 @@
+[
+  {
+    "headline": "Abbott shares surge after quarterly earnings beat expectations",
+    "summary": "Abbott reported revenue and profit ahead of consensus.",
+    "source": "Reuters",
+    "related": "ABT",
+    "datetime": 1784217600
+  },
+  {
+    "headline": "Abbott wins expanded regulatory approval for flagship product",
+    "summary": "",
+    "source": "CNBC",
+    "related": "ABT",
+    "datetime": 1784196000
+  },
+  {
+    "headline": "Sandisk tumbles as guidance disappoints investors",
+    "summary": "Weak outlook overshadowed in-line results at Sandisk.",
+    "source": "Bloomberg",
+    "related": "SNDK",
+    "datetime": 1784221200
+  },
+  {
+    "headline": "Weekly wrap: biggest movers across the market",
+    "summary": "Roundup of notable stock moves this week.",
+    "source": "GenericWire",
+    "related": "STX,SPY,QQQ",
+    "datetime": 1784232000
+  }
+]
