@@ -237,3 +237,7 @@ secrets.*
 CLAUDE.md
 .claude/
 .claude/settings.local.json
+
+# Svelte frontend source (web/): re-include the shared-lib dir caught by the
+# Python packaging "lib/" pattern above; web/ manages its own ignores in web/.gitignore
+!web/src/lib/
