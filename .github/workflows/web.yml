@@ -1,0 +1,53 @@
+# Rebuilds the Svelte frontend and commits the built output into globe/ whenever
+# the web/ source changes on main — so the served pages never drift from source.
+#
+# Safety: the commit stages an EXPLICIT allowlist (the two entry HTML files +
+# globe/app/) and NEVER a data path, so this workflow can never touch
+# globe/dashboard/data/sp500.json — whose git-commit history the daily-video
+# freshness guard depends on. globe/ data files are produced only by globe.yml;
+# this workflow leaves them untouched. daily-video.yml is unaffected.
+name: Build web frontend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-web
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+
+      - name: Build (clean app/ first so stale hashed assets don't pile up)
+        working-directory: web
+        run: |
+          npm ci
+          rm -rf ../globe/app
+          npm run build
+
+      - name: Commit built output (explicit allowlist — never data paths)
+        run: |
+          git config user.name "myendmess"
+          git config user.email "boujnanemohamed23@gmail.com"
+          git add globe/index.html globe/dashboard/index.html globe/app
+          if git diff --staged --quiet; then
+            echo "Built output already up to date — nothing to commit."
+          else
+            git commit -m "chore(web): rebuild frontend $(date -u +%Y-%m-%d)"
+            git pull --rebase
+            git push
+          fi
