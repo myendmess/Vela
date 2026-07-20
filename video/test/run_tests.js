@@ -18,7 +18,7 @@ const generalNews = deepFreeze(FX('fixtures/general_news.fixture.json'));
 const companyNews = deepFreeze(FX('fixtures/company_news.fixture.json'));
 const usedBefore = deepFreeze(FX('fixtures/used_before.fixture.json'));
 const cfgDefault = deepFreeze(FX('fixtures/config.default.json'));
-const golden = FX('golden/payload.golden.json');
+const golden = deepFreeze(FX('golden/payload.golden.json'));
 
 // date-string rendering depends on the Node/ICU build — warn, don't fail (framework B3)
 const major = v => String(v).replace(/^v/, '').split('.')[0];
@@ -27,7 +27,7 @@ if (meta.node_version && major(meta.node_version) !== major(process.version)) {
 }
 
 const now = new Date(meta.frozen_now);
-const movers = pickMovers(stocks, Number(cfgDefault.movers_with_news) || 2); // mirrors make_video.js
+const movers = deepFreeze(pickMovers(stocks, Number(cfgDefault.movers_with_news) || 2)); // mirrors make_video.js
 
 // ---- shared invariants (platform limits + contracts) ----
 const allTexts = p => p.timeline.tracks.flatMap(tr => tr.clips).map(c => c.asset && c.asset.text).filter(Boolean).join('\n');
@@ -67,9 +67,13 @@ flagTest('show_equal_weight', { show_equal_weight: true }, (p, texts) => {
   assert.ok(!/Equal-wt/.test(goldenTexts), 'golden unexpectedly contains Equal-wt');
 });
 
-// V-4: near-52w highs/lows counts on the breadth slide
+// V-4: near-52w highs/lows counts on the breadth slide — exact counts, mirroring
+// the production filters, so the counting logic itself is asserted (not just the line)
+const validRows = stocks.filter(s => s && s.ticker && s.perf && typeof s.perf['1d'] === 'number');
+const expHi = validRows.filter(s => typeof s.wk52_position === 'number' && s.wk52_position >= 0.98).length;
+const expLo = validRows.filter(s => typeof s.wk52_position === 'number' && s.wk52_position <= 0.02).length;
 flagTest('show_hl_counts', { show_hl_counts: true }, (p, texts) => {
-  assert.ok(/near 52w highs \d+ · lows \d+/.test(texts), 'highs/lows line missing');
+  assert.ok(texts.includes('near 52w highs ' + expHi + ' · lows ' + expLo), 'highs/lows counts wrong or missing (expected ' + expHi + '/' + expLo + ')');
 });
 
 // V-3: 52w markers on the gainer/loser lists + range/1y context on mover headline slides

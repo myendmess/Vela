@@ -208,7 +208,8 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
     }
     if (showDollarMoves && isTop && rec.market_cap) {
       const delta = Math.abs(rec.market_cap - rec.market_cap / (1 + m.move / 100));
-      extra.push('≈ $' + (delta / 1e9).toFixed(1) + 'B market value ' + (m.move >= 0 ? 'added' : 'lost'));
+      // move === -100 divides by zero; omit the line rather than print "$InfinityB"
+      if (Number.isFinite(delta)) extra.push('≈ $' + (delta / 1e9).toFixed(1) + 'B market value ' + (m.move >= 0 ? 'added' : 'lost'));
     }
     return extra;
   }
@@ -397,7 +398,9 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
       '52 week high stocks', 'sp500 heatmap');
     if (secList.length) baseTags.push(secList[0].name.toLowerCase() + ' sector');
   }
-  const tags = baseTags.join(',').slice(0, 480);
+  // YouTube's 480-char cap, but never leave a truncated partial tag behind the cut
+  let tags = baseTags.join(',');
+  if (tags.length > 480) tags = tags.slice(0, 480).replace(/,[^,]*$/, '');
 
   return {
     timeline: timeline,
