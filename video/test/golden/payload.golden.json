@@ -1,0 +1,1332 @@
+{
+  "timeline": {
+    "background": "#0b0e14",
+    "tracks": [
+      {
+        "clips": [
+          {
+            "asset": {
+              "type": "image",
+              "src": "https://myendmess.github.io/Vela/assets/logo-neon.png"
+            },
+            "start": 0,
+            "length": 3,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.26
+            },
+            "scale": 0.34,
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "image",
+              "src": "https://myendmess.github.io/Vela/assets/logo-neon.png"
+            },
+            "start": 3,
+            "length": 51.400000000000006,
+            "position": "topRight",
+            "offset": {
+              "x": -0.05,
+              "y": -0.13
+            },
+            "scale": 0.12,
+            "transition": {
+              "in": "fade"
+            }
+          }
+        ]
+      },
+      {
+        "clips": [
+          {
+            "asset": {
+              "type": "text",
+              "text": "MARKET BREADTH",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "58",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 160
+            },
+            "start": 3.1,
+            "length": 4.8,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.3
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "SECTORS",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "58",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 160
+            },
+            "start": 8.1,
+            "length": 5.8,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.3
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "TOP GAINERS",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "58",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 160
+            },
+            "start": 14.1,
+            "length": 5.8,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.3
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "ABT  +10.71%",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#4ade80",
+                "size": "58",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 160
+            },
+            "start": 20.1,
+            "length": 6.04,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.3
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "TOP LOSERS",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "58",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 160
+            },
+            "start": 26.340000000000003,
+            "length": 5.8,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.3
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "SNDK  -12.63%",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#f87171",
+                "size": "58",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 160
+            },
+            "start": 32.34,
+            "length": 5.4799999999999995,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.3
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "IN THE NEWS",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "58",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 160
+            },
+            "start": 38.02,
+            "length": 6.32,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.3
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "IN THE NEWS",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "58",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 160
+            },
+            "start": 44.540000000000006,
+            "length": 5.76,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.3
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          }
+        ]
+      },
+      {
+        "clips": [
+          {
+            "asset": {
+              "type": "shape",
+              "shape": "rectangle",
+              "fill": {
+                "color": "#fbbf24",
+                "opacity": 1
+              },
+              "stroke": {
+                "color": "#fbbf24",
+                "width": "0"
+              },
+              "width": 120,
+              "height": 8,
+              "rectangle": {
+                "width": 120,
+                "height": 8,
+                "cornerRadius": 4
+              }
+            },
+            "start": 3.1,
+            "length": 4.8,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.245
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "shape",
+              "shape": "rectangle",
+              "fill": {
+                "color": "#fbbf24",
+                "opacity": 1
+              },
+              "stroke": {
+                "color": "#fbbf24",
+                "width": "0"
+              },
+              "width": 120,
+              "height": 8,
+              "rectangle": {
+                "width": 120,
+                "height": 8,
+                "cornerRadius": 4
+              }
+            },
+            "start": 8.1,
+            "length": 5.8,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.245
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "shape",
+              "shape": "rectangle",
+              "fill": {
+                "color": "#fbbf24",
+                "opacity": 1
+              },
+              "stroke": {
+                "color": "#fbbf24",
+                "width": "0"
+              },
+              "width": 120,
+              "height": 8,
+              "rectangle": {
+                "width": 120,
+                "height": 8,
+                "cornerRadius": 4
+              }
+            },
+            "start": 14.1,
+            "length": 5.8,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.245
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "shape",
+              "shape": "rectangle",
+              "fill": {
+                "color": "#fbbf24",
+                "opacity": 1
+              },
+              "stroke": {
+                "color": "#fbbf24",
+                "width": "0"
+              },
+              "width": 120,
+              "height": 8,
+              "rectangle": {
+                "width": 120,
+                "height": 8,
+                "cornerRadius": 4
+              }
+            },
+            "start": 20.1,
+            "length": 6.04,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.245
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "shape",
+              "shape": "rectangle",
+              "fill": {
+                "color": "#fbbf24",
+                "opacity": 1
+              },
+              "stroke": {
+                "color": "#fbbf24",
+                "width": "0"
+              },
+              "width": 120,
+              "height": 8,
+              "rectangle": {
+                "width": 120,
+                "height": 8,
+                "cornerRadius": 4
+              }
+            },
+            "start": 26.340000000000003,
+            "length": 5.8,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.245
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "shape",
+              "shape": "rectangle",
+              "fill": {
+                "color": "#fbbf24",
+                "opacity": 1
+              },
+              "stroke": {
+                "color": "#fbbf24",
+                "width": "0"
+              },
+              "width": 120,
+              "height": 8,
+              "rectangle": {
+                "width": 120,
+                "height": 8,
+                "cornerRadius": 4
+              }
+            },
+            "start": 32.34,
+            "length": 5.4799999999999995,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.245
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "shape",
+              "shape": "rectangle",
+              "fill": {
+                "color": "#fbbf24",
+                "opacity": 1
+              },
+              "stroke": {
+                "color": "#fbbf24",
+                "width": "0"
+              },
+              "width": 120,
+              "height": 8,
+              "rectangle": {
+                "width": 120,
+                "height": 8,
+                "cornerRadius": 4
+              }
+            },
+            "start": 38.02,
+            "length": 6.32,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.245
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "shape",
+              "shape": "rectangle",
+              "fill": {
+                "color": "#fbbf24",
+                "opacity": 1
+              },
+              "stroke": {
+                "color": "#fbbf24",
+                "width": "0"
+              },
+              "width": 120,
+              "height": 8,
+              "rectangle": {
+                "width": 120,
+                "height": 8,
+                "cornerRadius": 4
+              }
+            },
+            "start": 44.540000000000006,
+            "length": 5.76,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.245
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          }
+        ]
+      },
+      {
+        "clips": [
+          {
+            "asset": {
+              "type": "text",
+              "text": "S&P 500\nDAILY RECAP",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "72",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 0.2,
+            "length": 2.6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "Index move  -0.69%\n\n▲ 367 advancing\n▼ 132 declining\n· 1 flat",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#f87171",
+                "size": "48",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 3.2,
+            "length": 4.6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "Staples  +2.81%\nHealth Care  +2.22%\nReal Estate  +2.13%",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#4ade80",
+                "size": "46",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 8.2,
+            "length": 5.6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "ABT  +10.71%\nJBHT  +8.01%\nFDXF  +7.50%\nERIE  +7.49%\nCTAS  +7.22%",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#4ade80",
+                "size": "50",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 14.2,
+            "length": 5.6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "Abbott shares surge after quarterly earnings beat expectations",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "42",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 20.2,
+            "length": 5.84,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "SNDK  -12.63%\nSTX  -10.00%\nGLW  -9.19%\nWDC  -9.15%\nMRVL  -8.71%",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#f87171",
+                "size": "50",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 26.44,
+            "length": 5.6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "Sandisk tumbles as guidance disappoints investors",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "42",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 32.440000000000005,
+            "length": 5.279999999999999,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "Fed signals September rate cut amid cooling inflation data",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "42",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 38.120000000000005,
+            "length": 6.12,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "Chipmakers rally on strong semiconductor demand outlook",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "42",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 44.64000000000001,
+            "length": 5.56,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "Explore the full\ninteractive heatmap",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#ffffff",
+                "size": "54",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 760
+            },
+            "start": 50.60000000000001,
+            "length": 3.6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": 0.03
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          }
+        ]
+      },
+      {
+        "clips": [
+          {
+            "asset": {
+              "type": "text",
+              "text": "Friday, 17 July 2026\nat last close",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "32",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 420
+            },
+            "start": 0.2,
+            "length": 2.6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.27
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "Consumer Disc.  -0.32%\nTech  -1.73%\nComms  -3.37%",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#f87171",
+                "size": "46",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 420
+            },
+            "start": 8.2,
+            "length": 5.6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.27
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "REUTERS",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "28",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 420
+            },
+            "start": 20.2,
+            "length": 5.84,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.27
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "BLOOMBERG",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "28",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 420
+            },
+            "start": 32.440000000000005,
+            "length": 5.279999999999999,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.27
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "CNBC",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "28",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 420
+            },
+            "start": 38.120000000000005,
+            "length": 6.12,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.27
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "BLOOMBERG",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "28",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 420
+            },
+            "start": 44.64000000000001,
+            "length": 5.56,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.27
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#fbbf24",
+                "size": "34",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 420
+            },
+            "start": 50.60000000000001,
+            "length": 3.6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.27
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          }
+        ]
+      },
+      {
+        "clips": [
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "26",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 60
+            },
+            "start": 0,
+            "length": 3,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.44
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "26",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 60
+            },
+            "start": 3,
+            "length": 5,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.44
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "26",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 60
+            },
+            "start": 8,
+            "length": 6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.44
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "26",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 60
+            },
+            "start": 14,
+            "length": 6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.44
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "26",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 60
+            },
+            "start": 20,
+            "length": 6.24,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.44
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "26",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 60
+            },
+            "start": 26.240000000000002,
+            "length": 6,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.44
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "26",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 60
+            },
+            "start": 32.24,
+            "length": 5.68,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.44
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "26",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 60
+            },
+            "start": 37.92,
+            "length": 6.5200000000000005,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.44
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          },
+          {
+            "asset": {
+              "type": "text",
+              "text": "myendmess.github.io/Vela/globe/dashboard",
+              "font": {
+                "family": "Montserrat ExtraBold",
+                "color": "#9ca3af",
+                "size": "26",
+                "lineHeight": 1.5
+              },
+              "alignment": {
+                "horizontal": "center",
+                "vertical": "center"
+              },
+              "width": 920,
+              "height": 60
+            },
+            "start": 44.440000000000005,
+            "length": 5.96,
+            "position": "center",
+            "offset": {
+              "x": 0,
+              "y": -0.44
+            },
+            "transition": {
+              "in": "fade",
+              "out": "fade"
+            }
+          }
+        ]
+      }
+    ],
+    "soundtrack": {
+      "src": "https://shotstack-assets.s3.ap-southeast-2.amazonaws.com/music/unminus/palmtrees.mp3",
+      "effect": "fadeInFadeOut",
+      "volume": 0.4
+    }
+  },
+  "output": {
+    "format": "mp4",
+    "size": {
+      "width": 1080,
+      "height": 1920
+    },
+    "fps": 25
+  },
+  "youtube": {
+    "title": "S&P 500 Today: ABT +10.7%, SNDK -12.6% | Market Recap 17 Jul #Shorts",
+    "description": "Today's S&P 500 recap: market breadth, sector performance, top gainers & losers, and the headlines moving stocks.\n\n📈 Top gainer: ABT +10.71%\n📉 Top loser: SNDK -12.63%\n📊 Index move: -0.69% (367 up / 132 down)\n\nFree interactive S&P 500 heatmap: https://myendmess.github.io/Vela/globe/dashboard/\n\nNew recap every trading day - subscribe so you never miss the market open prep.\n\n#Shorts #StockMarket #SP500 #Investing #MarketRecap #Stocks #FinanceNews",
+    "tags": "stock market today,sp500,s&p 500,market recap,daily market update,top gainers,top losers,stock news,investing,finance news,stock market news,market analysis,ABT,JBHT,FDXF,ERIE,CTAS,SNDK,STX,GLW,WDC,MRVL"
+  },
+  "used_headlines": [
+    "Abbott shares surge after quarterly earnings beat expectations",
+    "Sandisk tumbles as guidance disappoints investors",
+    "Fed signals September rate cut amid cooling inflation data",
+    "Chipmakers rally on strong semiconductor demand outlook"
+  ]
+}

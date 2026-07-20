@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* Ported from globe/dashboard/index.html <style> block (visual parity). */
+:root { --up: #089981; --down: #f23645; }
+html, body { height: 100%; }
+.tnum { font-variant-numeric: tabular-nums; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: #1e222d; border-radius: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+.fade-in { animation: fi 0.25s ease; }
+@keyframes fi {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* UI-3: horizontally scrollable chip row without a visible scrollbar. */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* UI-4: sector-shaped skeleton shimmer while fetching. */
+.skeleton {
+  background: linear-gradient(110deg, #12151d 8%, #1a202c 18%, #12151d 33%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@keyframes shimmer {
+  to { background-position-x: -200%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in { animation: none; }
+  .skeleton { animation: none; background: #12151d; }
+}
