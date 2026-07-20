@@ -1,13 +1,14 @@
 <script>
   import { ui, getRows, currentIndex } from './store.svelte.js';
+  import { retryLoad } from './actions.js';
   import { METRICS } from '../lib/metrics.js';
   import HeaderBar from './HeaderBar.svelte';
   import DrillToolbar from './DrillToolbar.svelte';
   import Treemap from './Treemap.svelte';
   import TreemapSkeleton from './TreemapSkeleton.svelte';
-  import ErrorCard from './ErrorCard.svelte';
+  import ErrorCard from '../lib/ErrorCard.svelte';
   import StockInspector from './StockInspector.svelte';
-  import BottomSheet from './BottomSheet.svelte';
+  import InspectorSheet from './InspectorSheet.svelte';
   import FirstVisitHint from './FirstVisitHint.svelte';
 
   const statusText = $derived.by(() => {
@@ -31,7 +32,12 @@
       class="relative flex-1 min-h-0 md:flex-none md:h-[55dvh] lg:h-auto lg:col-span-3 rounded-lg border border-[#1e222d] overflow-hidden bg-[#0a0b0f]"
       aria-label="Market treemap">
       {#if ui.status === 'error'}
-        <ErrorCard />
+        <!-- UI-4: error card with message, Retry, and a link back to the globe -->
+        <ErrorCard detail={ui.errorMsg} onretry={retryLoad}>
+          <div class="mt-3">
+            <a href="../" class="text-xs text-slate-400 hover:text-amber-400 focus-visible:outline-2 focus-visible:outline-amber-400">← Back to globe</a>
+          </div>
+        </ErrorCard>
       {:else}
         {#if ui.dataVersion > 0}
           <Treemap />
@@ -60,5 +66,5 @@
 </div>
 
 {#if ui.isMobile}
-  <BottomSheet />
+  <InspectorSheet />
 {/if}

@@ -1,6 +1,6 @@
 <script>
   import { ui, currentIndex } from './store.svelte.js';
-  import VelaLogo from './VelaLogo.svelte';
+  import VelaLogo from '../lib/VelaLogo.svelte';
   import IndexChips from './IndexChips.svelte';
   import MetricSelect from './MetricSelect.svelte';
   import TickerSearch from './TickerSearch.svelte';

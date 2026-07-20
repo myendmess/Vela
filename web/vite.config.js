@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
 
 // ---------------------------------------------------------------------------
-// Vela web app (Stage 1: dashboard page).
+// Vela web app (Stage 1: dashboard page · Stage 2: globe landing page).
 //
 // Dev/preview data strategy: `publicDir: '../globe'` with `copyPublicDir: false`
 // makes the dev server serve the repo's REAL `globe/` files at the server root
@@ -29,6 +29,7 @@ export default defineConfig({
     copyPublicDir: false,
     rollupOptions: {
       input: {
+        globe: fileURLToPath(new URL('./index.html', import.meta.url)),
         dashboard: fileURLToPath(new URL('./dashboard/index.html', import.meta.url)),
       },
     },
