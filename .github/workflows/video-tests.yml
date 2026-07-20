@@ -1,0 +1,22 @@
+# PR gate for the daily-video pipeline: any change under video/ must keep the
+# golden-baseline regression green (see video/test/run_tests.js). Zero npm
+# dependencies - plain Node, same as the pipeline itself. This workflow never
+# runs in production and never commits anything; daily-video.yml is untouched.
+name: Video Payload Tests
+
+on:
+  pull_request:
+    paths:
+      - 'video/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Golden regression + flag assertions
+        run: node video/test/run_tests.js
