@@ -6,4 +6,5 @@ export const bus = {
   zoomTo: null, // (nodeId) => void
   reset: null, // () => void
   pendingZoom: null, // nodeId | null
+  appliedVersion: 0, // ui.dataVersion the chart last applied an option for
 };

@@ -43,7 +43,9 @@ export async function loadDataset({ pendingTicker = null } = {}) {
     document.title = `Vela — ${entry.label} Map`;
     if (pendingTicker) {
       const s = findRow(pendingTicker);
-      if (s) selectStock(s.ticker, { zoom: true });
+      // sync:false — the URL already carries this state (boot deep link or
+      // popstate); rewriting it on load would drop foreign params/hash.
+      if (s) selectStock(s.ticker, { zoom: true, sync: false });
     }
   } catch (e) {
     if (token !== loadToken) return;
@@ -62,7 +64,7 @@ export async function boot() {
     setRegistry(reg);
     // ?index=: valid live id → that index; absent/unknown/non-live → sp500.
     const q = (params.get('index') || 'sp500').toLowerCase();
-    ui.indexId = getLive()[q] ? q : 'sp500';
+    ui.indexId = Object.hasOwn(getLive(), q) ? q : 'sp500'; // hasOwn: ?index=constructor must fall back too
     await loadDataset({ pendingTicker });
   } catch (e) {
     ui.status = 'error';
@@ -86,7 +88,7 @@ export function setMetric(m) {
   syncURL();
 }
 
-export function selectStock(ticker, { zoom = false } = {}) {
+export function selectStock(ticker, { zoom = false, sync = true } = {}) {
   const s = findRow(ticker);
   if (!s) return;
   ui.selectedTicker = s.ticker;
@@ -98,10 +100,14 @@ export function selectStock(ticker, { zoom = false } = {}) {
     // is then one tap away. Desktop zooms straight to the industry.
     const id = ui.isMobile ? 'S:' + sec : 'I:' + sec + '|' + ind;
     ui.drill = ui.isMobile ? { sector: sec } : { sector: sec, industry: ind };
-    if (bus.zoomTo && ui.status === 'ready') bus.zoomTo(id);
+    // Direct dispatch only when the chart has applied the CURRENT dataset;
+    // otherwise park the zoom — Treemap fires it right after its next option
+    // apply. (A fresh dataset from a deep link or back/forward would
+    // otherwise race the chart's $effect and the zoom would be swallowed.)
+    if (bus.zoomTo && ui.status === 'ready' && bus.appliedVersion === ui.dataVersion) bus.zoomTo(id);
     else bus.pendingZoom = id;
   }
-  syncURL();
+  if (sync) syncURL();
 }
 
 export function dismissSheet() {
@@ -113,7 +119,7 @@ export function dismissSheet() {
 // UI-16: client-side index switching (chips) — pushState, no page reload;
 // metric preserved, selection dropped.
 export async function switchIndex(id) {
-  if (id === ui.indexId || !getLive()[id]) return;
+  if (id === ui.indexId || !Object.hasOwn(getLive(), id)) return;
   ui.indexId = id;
   ui.selectedTicker = null;
   ui.sheet = 'closed';
@@ -127,7 +133,7 @@ export async function onPopState() {
   const m = p.get('metric');
   ui.metric = m && METRICS[m] ? m : '1d';
   const q = (p.get('index') || 'sp500').toLowerCase();
-  const id = getLive()[q] ? q : 'sp500';
+  const id = Object.hasOwn(getLive(), q) ? q : 'sp500';
   const t = (p.get('t') || '').toUpperCase() || null;
   if (id !== ui.indexId) {
     ui.indexId = id;
@@ -136,7 +142,7 @@ export async function onPopState() {
     ui.drill = null;
     await loadDataset({ pendingTicker: t });
   } else if (t && findRow(t)) {
-    selectStock(t);
+    selectStock(t, { sync: false }); // restoring history — never rewrite it
   } else {
     ui.selectedTicker = null;
     ui.sheet = 'closed';

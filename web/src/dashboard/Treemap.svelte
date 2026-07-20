@@ -27,13 +27,18 @@
     return `${p.name}\n${s}`;
   }
 
+  // The tooltip renders as HTML (ECharts renderMode 'html') — every string
+  // that originates in the data files must be escaped before interpolation.
+  const esc = (s) => String(s).replace(/[&<>"']/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
   function tooltipFormatter(info) {
-    const CUR = currentIndex()?.cur ?? '';
+    const CUR = esc(currentIndex()?.cur ?? '');
     const d = info.data && info.data._raw;
-    if (!d) return `<b>${info.name}</b><br>${fmtB(info.value, CUR)}`;
+    if (!d) return `<b>${esc(info.name)}</b><br>${esc(fmtB(info.value, currentIndex()?.cur ?? ''))}`;
     let html =
-      `<b>${d.ticker}</b> — ${d.name}<br>` +
-      `<span style="color:#8b97a7">${CUR}${d.price} · 1D <span style="color:${pctColor(d.perf && d.perf['1d'])}">${pctStr(d.perf && d.perf['1d'])}</span></span>`;
+      `<b>${esc(d.ticker)}</b> — ${esc(d.name)}<br>` +
+      `<span style="color:#8b97a7">${CUR}${esc(d.price)} · 1D <span style="color:${pctColor(d.perf && d.perf['1d'])}">${pctStr(d.perf && d.perf['1d'])}</span></span>`;
     if (ui.metric !== '1d')
       html += `<br><span style="color:#8b97a7">${METRICS[ui.metric].label} ${metricStr(metricVal(d, ui.metric), ui.metric)}</span>`;
     return html + `<br><span style="color:#61708d;font-size:11px">click to inspect ↗</span>`;
@@ -142,6 +147,7 @@
       bus.zoomTo = null;
       bus.reset = null;
       bus.pendingZoom = null;
+      bus.appliedVersion = 0;
       chart.dispose();
       chart = null;
     };
@@ -166,6 +172,7 @@
     } else {
       chart.setOption({ series: [{ data: buildTree(getRows(), m, { groupStats: ui.isMobile }) }] });
     }
+    bus.appliedVersion = dv; // actions gate direct zoom dispatches on this
     prev = { dv, layout };
   });
 </script>

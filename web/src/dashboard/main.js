@@ -18,7 +18,12 @@ mqMobile.addEventListener('change', (e) => {
   ui.drill = null;
   ui.sheet = 'closed';
 });
-mqTouch.addEventListener('change', (e) => { ui.isTouch = e.matches; });
+mqTouch.addEventListener('change', (e) => {
+  ui.isTouch = e.matches;
+  // isTouch is part of the chart's layout key — the option re-apply resets
+  // the zoom, so drop the drill path to match.
+  ui.drill = null;
+});
 
 window.addEventListener('popstate', onPopState);
 

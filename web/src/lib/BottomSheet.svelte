@@ -41,11 +41,13 @@
     dragging = false;
     const dy = dragDY;
     dragDY = 0;
-    // Tap (no real drag): toggle peek ↔ full. Note the click event itself
-    // retargets to this div because of setPointerCapture, so the handle
-    // button's onclick only fires for keyboard activation.
+    // Tap (no real drag): toggle peek ↔ full — or dismiss when there is no
+    // peek state, so the visible handle/close affordance works for taps.
+    // (The click event retargets to this div because of setPointerCapture,
+    // so the handle button's onclick only fires for keyboard activation.)
     if (Math.abs(dy) < 5) {
-      toggle();
+      if (peekEnabled) toggle();
+      else ondismiss?.();
       return;
     }
     const dt = performance.now() - startT;

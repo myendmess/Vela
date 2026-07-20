@@ -5,7 +5,7 @@
 // relative to the page; each index's `file` (e.g. "data/sp500.json") resolves
 // against new URL('dashboard/', registryUrl). This works both in dev
 // (/dashboard/ + /indexes.json) and on GitHub Pages
-// (/Vela/dashboard/ + /Vela/indexes.json).
+// (/Vela/globe/dashboard/ + /Vela/globe/indexes.json).
 
 // Daily cache-bust: data refreshes once a day, so a date-stamped URL keeps
 // browsers from serving yesterday's JSON without disabling caching entirely.
