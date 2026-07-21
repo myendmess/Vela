@@ -1,0 +1,7 @@
+
+# Built frontend assets (produced by web/ Vite build) - opaque artifacts.
+# Never EOL-convert them: keeps rebuilds byte-stable across Windows/Linux and
+# avoids spurious diffs in minified JS/CSS.
+globe/app/** -text
+globe/index.html -text
+globe/dashboard/index.html -text
