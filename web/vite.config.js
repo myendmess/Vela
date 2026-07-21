@@ -4,28 +4,36 @@ import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'node:url';
 
 // ---------------------------------------------------------------------------
-// Vela web app (Stage 1: dashboard page · Stage 2: globe landing page).
+// Vela web app — Svelte MPA: globe landing page (index.html → globe/index.html)
+// + treemap dashboard (dashboard/index.html → globe/dashboard/index.html).
 //
-// Dev/preview data strategy: `publicDir: '../globe'` with `copyPublicDir: false`
-// makes the dev server serve the repo's REAL `globe/` files at the server root
-// (e.g. /indexes.json, /dashboard/data/sp500.json) without ever copying them
-// into `dist/`. The app fetches its registry at `../indexes.json` relative to
-// the page, so `npm run dev` → http://localhost:5173/dashboard/ runs against
-// live daily data. Data JSON is fetched at runtime only — never imported at
-// build time.
+// Dev (`npm run dev`): publicDir '../globe' serves the repo's REAL globe/ files
+// at the dev-server root (/indexes.json, /dashboard/data/sp500.json, …) so the
+// app runs against live daily data. Data JSON is fetched at RUNTIME only —
+// never imported at build time.
 //
-// PRODUCTION PLAN (do NOT do this yet): a later cutover stage will retarget
-// `build.outDir` into `globe/` (with `emptyOutDir: false`) so the built
-// dashboard replaces `globe/dashboard/index.html` in place on GitHub Pages.
-// For now the build stays self-contained in `web/dist/`.
+// Build (`npm run build`) — PRODUCTION CUTOVER: output is written in place into
+// ../globe with emptyOutDir:false, so it overwrites ONLY globe/index.html,
+// globe/dashboard/index.html and the hashed globe/app/* assets, while leaving
+// the machine-committed data (globe/indexes.json, globe/data/**,
+// globe/dashboard/data/**), globe/scripts/** and globe/README.md byte-untouched.
+// publicDir is disabled for the build so those data files are never copied into,
+// or cleared from, the output. GitHub Pages stays deploy-from-branch — no
+// settings change; the URLs printed in every published video keep working.
+//
+// NOTE: with emptyOutDir:false Vite does not clean globe/app/, so .github/
+// workflows/web.yml removes globe/app/ before each rebuild to stop stale hashed
+// assets accumulating. base:'./' keeps every asset/data path relative, so the
+// build is correct under the /Vela/globe/ subpath without any base config.
 // ---------------------------------------------------------------------------
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   base: './',
-  publicDir: '../globe',
+  publicDir: command === 'serve' ? '../globe' : false,
   plugins: [svelte(), tailwindcss()],
   build: {
-    outDir: 'dist',
+    outDir: '../globe',
     assetsDir: 'app',
+    emptyOutDir: false,
     copyPublicDir: false,
     rollupOptions: {
       input: {
@@ -34,4 +42,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
