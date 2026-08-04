@@ -9,6 +9,10 @@ on:
         description: 'Build the payload only — no render, no upload'
         required: false
         default: 'false'
+      render_only:
+        description: 'Render the mp4 and attach it as an artifact — no upload to YouTube'
+        required: false
+        default: 'false'
       privacy:
         description: 'Override privacy for this run: public / unlisted / private. Blank = use config.json.'
         required: false
@@ -40,10 +44,16 @@ jobs:
           echo "simulate_failure=true - failing on purpose to test the alert."
           exit 1
 
+      - name: Install renderer (ffmpeg + Montserrat)
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg fonts-montserrat
+          ffmpeg -version | head -1
+
       - name: Build & publish daily recap Short
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
-          SHOTSTACK_API_KEY: ${{ secrets.SHOTSTACK_API_KEY }}
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
@@ -52,9 +62,19 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
             node video/make_video.js --dry-run
+          elif [ "${{ github.event.inputs.render_only }}" = "true" ]; then
+            node video/make_video.js --render-only recap.mp4
           else
             node video/make_video.js
           fi
+
+      - name: Upload the rendered mp4 (render_only runs)
+        if: github.event.inputs.render_only == 'true' && hashFiles('recap.mp4') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: recap-mp4
+          path: recap.mp4
+          retention-days: 7
 
       - name: Commit news memory (video/state.json)
         if: success() && github.event.inputs.dry_run != 'true'
