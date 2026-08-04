@@ -1,8 +1,11 @@
 'use strict';
 
-// Builds the Shotstack render payload + YouTube SEO metadata for the daily
-// S&P 500 recap Short. Pure function - same logic as the n8n "Build Shotstack
-// payload" Code node, so the two pipelines produce identical videos.
+// Builds the render timeline + YouTube SEO metadata for the daily S&P 500 recap
+// Short. Pure function - same logic as the n8n "Build Shotstack payload" Code
+// node, so the two pipelines produce identical videos. The timeline schema is
+// Shotstack's (that is what this pipeline used to render with); video/render.js
+// now draws it locally with ffmpeg, and the shape was kept so this builder and
+// its golden tests did not have to change.
 
 // Finnhub's "general" feed mixes in world/politics stories - keep market-related headlines only
 const MARKET_RE = /\b(stocks?|shares?|markets?|S&P|Nasdaq|Dow|Wall Street|Fed|Federal Reserve|rate cut|interest rate|inflation|earnings|profit|revenue|guidance|IPO|merger|acquisition|Treasury|bonds?|yields?|oil|crude|OPEC|dollar|euro|econom(?:y|ic)|GDP|jobs report|tariffs?|crypto|bitcoin|ETF|investors?|trading|rally|sell-?off|chipmaker|semiconductors?)\b/i;
@@ -104,7 +107,7 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
   const losers = byMove.slice(-5).reverse();
   const byTicker = new Map(clean.map(s => [s.ticker, s]));
 
-  // ---- Slide builder (one Shotstack track per text layer so clips never overlap) ----
+  // ---- Slide builder (one track per text layer so clips never overlap) ----
   const GREEN = '#4ade80', RED = '#f87171', WHITE = '#ffffff', GRAY = '#9ca3af';
   const ACCENT = cfg.accent_color || '#fbbf24';
 
@@ -316,9 +319,10 @@ function buildPayload({ stocks, generalNews, companyNews, movers, cfg, usedBefor
       position: 'center', offset: { x: 0, y: 0.26 }, scale: 0.34,
       transition: { in: 'fade', out: 'fade' }
     });
-    // small persistent corner mark for the rest of the video.
-    // The Shotstack stage watermark ROAMS across the top ~8% band (seen at both
-    // top-left and top-right in real renders), so sit below the band entirely.
+    // small persistent corner mark for the rest of the video. It sits below the
+    // top ~8% band because Shotstack's stage watermark used to roam there; local
+    // ffmpeg renders have no watermark, but the placement is kept so the framing
+    // (and the golden baseline) stays put.
     logoClips.push({
       asset: { type: 'image', src: cfg.logo_url },
       start: 3, length: Math.max(t - 3, 0.1),

@@ -1,24 +1,33 @@
 'use strict';
 
-// Daily S&P 500 recap Short: build -> render (Shotstack) -> upload (YouTube).
+// Daily S&P 500 recap Short: build -> render (ffmpeg) -> upload (YouTube).
 // Zero npm dependencies (Node 18+ global fetch). Runs in GitHub Actions
 // (.github/workflows/daily-video.yml) or locally: node video/make_video.js --dry-run
 //
-// Env: FINNHUB_API_KEY, SHOTSTACK_API_KEY, YT_CLIENT_ID, YT_CLIENT_SECRET,
+// Env: FINNHUB_API_KEY, YT_CLIENT_ID, YT_CLIENT_SECRET,
 //      YT_REFRESH_TOKEN, PLAYLIST_ID (optional, overrides config.json)
-// Missing YouTube/Shotstack secrets = graceful skip (exit 0), so the scheduled
-// run stays green until secrets are configured. See video/README.md.
+// Missing YouTube secrets = graceful skip (exit 0), so the scheduled run stays
+// green until secrets are configured. See video/README.md.
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { execSync } = require('child_process');
 const { buildPayload, pickMovers } = require('./payload');
+const { renderLocal } = require('./render');
 
 const cfg = require('./config.json');
 const REPO_ROOT = path.join(__dirname, '..');
 const DATA_FILE = path.join(REPO_ROOT, 'globe', 'dashboard', 'data', 'sp500.json');
 const DRY_RUN = process.argv.includes('--dry-run');
-const SHOTSTACK_BASE = 'https://api.shotstack.io/' + (cfg.shotstack_env || 'stage');
+// --render-only [file]: build and render, then stop before uploading - the way
+// to eyeball a real mp4 (locally, or as a CI artifact) without publishing it
+const RENDER_ONLY = process.argv.includes('--render-only');
+const RENDER_OUT = (() => {
+  const i = process.argv.indexOf('--render-only');
+  const next = i >= 0 ? process.argv[i + 1] : null;
+  return next && !next.startsWith('--') ? next : 'recap.mp4';
+})();
 // sp500.json is committed ~23:00 UTC, ~7h before the 06:00 UTC run. globe.yml
 // only commits when data changes, so a weekend / US holiday / stalled pipeline
 // leaves the file much older (>=31h) - the guard skips those so we never post a
@@ -48,21 +57,8 @@ function saveState(state) {
 async function jfetch(url, opts, what) {
   const res = await fetch(url, opts);
   const text = await res.text();
-  if (!res.ok) {
-    const err = new Error(what + ' failed: HTTP ' + res.status + ' - ' + text.slice(0, 300));
-    err.status = res.status;
-    err.body = text;
-    throw err;
-  }
+  if (!res.ok) throw new Error(what + ' failed: HTTP ' + res.status + ' - ' + text.slice(0, 300));
   return text ? JSON.parse(text) : {};
-}
-
-// Shotstack answers 403 when the account is out of render credits (the stage
-// environment still costs 1 credit per render, and the free allowance resets
-// monthly). That's an account state, not a bug in this repo - fail neutrally so
-// the scheduled run doesn't open a failure issue every morning until it resets.
-function isOutOfCredits(err) {
-  return err.status === 403 && /credit|plan limit/i.test(err.body || '');
 }
 
 // hours since the data file's last commit; null if unknown (shallow clone, no git)
@@ -108,26 +104,6 @@ async function getNews(movers) {
     await sleep(300); // stay far below Finnhub's 60 req/min
   }
   return { generalNews, companyNews };
-}
-
-async function renderVideo(payload) {
-  const headers = { 'Content-Type': 'application/json', 'x-api-key': process.env.SHOTSTACK_API_KEY };
-  const submit = await jfetch(SHOTSTACK_BASE + '/render', {
-    method: 'POST', headers,
-    body: JSON.stringify({ timeline: payload.timeline, output: payload.output })
-  }, 'Shotstack submit');
-  const id = submit.response.id;
-  log('Render submitted:', id);
-
-  for (let i = 0; i < 40; i++) {
-    await sleep(15000);
-    const check = await jfetch(SHOTSTACK_BASE + '/render/' + id, { headers: { 'x-api-key': process.env.SHOTSTACK_API_KEY } }, 'Shotstack status');
-    const status = check.response.status;
-    log('Render status:', status);
-    if (status === 'done') return check.response.url;
-    if (status === 'failed') throw new Error('Shotstack render failed: ' + (check.response.error || 'unknown reason'));
-  }
-  throw new Error('Shotstack render timed out after 10 minutes');
 }
 
 async function getAccessToken() {
@@ -227,29 +203,28 @@ async function main() {
     return;
   }
 
+  if (RENDER_ONLY) {
+    await renderLocal(payload, RENDER_OUT, log);
+    log('RENDER ONLY - wrote ' + RENDER_OUT + ', stopping before upload.');
+    return;
+  }
+
   // 4. Secrets gate: neutral skip so scheduled runs stay green until configured
-  const missing = ['SHOTSTACK_API_KEY', 'YT_CLIENT_ID', 'YT_CLIENT_SECRET', 'YT_REFRESH_TOKEN'].filter(k => !process.env[k]);
+  const missing = ['YT_CLIENT_ID', 'YT_CLIENT_SECRET', 'YT_REFRESH_TOKEN'].filter(k => !process.env[k]);
   if (missing.length) {
     log('SKIPPED: missing secrets: ' + missing.join(', ') + '. Add them in repo Settings -> Secrets and variables -> Actions (see video/README.md).');
     return;
   }
 
-  // 5. Render + download
-  let videoUrl;
+  // 5. Render locally with ffmpeg (no render API, no per-render cost)
+  const outFile = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'vela-video-')), 'recap.mp4');
+  let videoBuf;
   try {
-    videoUrl = await renderVideo(payload);
-  } catch (e) {
-    if (!isOutOfCredits(e)) throw e;
-    log('SKIPPED: Shotstack rejected the render - the account is out of credits (HTTP 403). '
-      + 'Each render costs 1 credit, including the "' + (cfg.shotstack_env || 'stage') + '" environment. '
-      + 'Check the balance at https://dashboard.shotstack.io/ - the free allowance resets monthly. No video today.');
-    return;
+    await renderLocal(payload, outFile, log);
+    videoBuf = fs.readFileSync(outFile);
+  } finally {
+    fs.rmSync(path.dirname(outFile), { recursive: true, force: true });
   }
-  log('Render done:', videoUrl);
-  const res = await fetch(videoUrl);
-  if (!res.ok) throw new Error('Video download failed: HTTP ' + res.status);
-  const videoBuf = Buffer.from(await res.arrayBuffer());
-  log('Downloaded', (videoBuf.length / 1048576).toFixed(1), 'MB');
 
   // 6. Upload + playlist
   const accessToken = await getAccessToken();

@@ -20,3 +20,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Golden regression + flag assertions
         run: node video/test/run_tests.js
+      - name: Install renderer (ffmpeg + Montserrat)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-montserrat
+      - name: Renderer + font metrics tests
+        run: node video/test/run_render_tests.js
