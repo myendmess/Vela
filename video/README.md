@@ -56,6 +56,7 @@ Any failed run automatically opens (or comments on) a GitHub Issue titled
 ## Behavior notes
 - **Freshness guard (scheduled runs only):** if `sp500.json`'s last commit is older than 18 h the scheduled run skips. Because `globe.yml` only commits when data changes, a weekend / US holiday / stalled pipeline leaves the file ≥31 h old — so this prevents posting a duplicate recap of an unchanged close. Manual `workflow_dispatch` runs bypass the guard so you can always trigger one on demand.
 - **Graceful degradation:** any Finnhub failure just removes news slides; a Shotstack failure or upload failure fails the run loudly.
+- **Out of Shotstack credits:** a render costs 1 credit even in the `stage` environment. When the balance hits 0 the API answers `403 … exceeds one or more plan limits`; the run logs `SKIPPED: … out of credits` and exits 0 instead of failing, so no failure issue is opened every morning until the allowance resets (check the balance at [dashboard.shotstack.io](https://dashboard.shotstack.io/)). Nothing is committed to `video/state.json`, so the headlines stay available for the next successful run.
 - Quota: 1 upload = 1,600 + playlist add = 50 of YouTube's 10,000 daily units.
 - **Testing from the Actions tab** (*Daily Recap Video → Run workflow*):
   - `dry_run = true` → builds the payload only, no render/upload.

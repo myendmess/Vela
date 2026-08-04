@@ -48,8 +48,21 @@ function saveState(state) {
 async function jfetch(url, opts, what) {
   const res = await fetch(url, opts);
   const text = await res.text();
-  if (!res.ok) throw new Error(what + ' failed: HTTP ' + res.status + ' - ' + text.slice(0, 300));
+  if (!res.ok) {
+    const err = new Error(what + ' failed: HTTP ' + res.status + ' - ' + text.slice(0, 300));
+    err.status = res.status;
+    err.body = text;
+    throw err;
+  }
   return text ? JSON.parse(text) : {};
+}
+
+// Shotstack answers 403 when the account is out of render credits (the stage
+// environment still costs 1 credit per render, and the free allowance resets
+// monthly). That's an account state, not a bug in this repo - fail neutrally so
+// the scheduled run doesn't open a failure issue every morning until it resets.
+function isOutOfCredits(err) {
+  return err.status === 403 && /credit|plan limit/i.test(err.body || '');
 }
 
 // hours since the data file's last commit; null if unknown (shallow clone, no git)
@@ -222,7 +235,16 @@ async function main() {
   }
 
   // 5. Render + download
-  const videoUrl = await renderVideo(payload);
+  let videoUrl;
+  try {
+    videoUrl = await renderVideo(payload);
+  } catch (e) {
+    if (!isOutOfCredits(e)) throw e;
+    log('SKIPPED: Shotstack rejected the render - the account is out of credits (HTTP 403). '
+      + 'Each render costs 1 credit, including the "' + (cfg.shotstack_env || 'stage') + '" environment. '
+      + 'Check the balance at https://dashboard.shotstack.io/ - the free allowance resets monthly. No video today.');
+    return;
+  }
   log('Render done:', videoUrl);
   const res = await fetch(videoUrl);
   if (!res.ok) throw new Error('Video download failed: HTTP ' + res.status);
