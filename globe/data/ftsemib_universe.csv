@@ -10,7 +10,6 @@ BMPS,BMPS.MI,Banca Monte dei Paschi,Financials,Banks
 BPE,BPE.MI,BPER Banca,Financials,Banks
 BZU,BZU.MI,Buzzi,Materials,Construction Materials
 CPR,CPR.MI,Davide Campari,Consumer Staples,Beverages
-DIA,DIA.MI,DiaSorin,Health Care,Diagnostics & Research
 ENEL,ENEL.MI,Enel,Utilities,Electric Utilities
 ENI,ENI.MI,Eni,Energy,Integrated Oil & Gas
 FBK,FBK.MI,FinecoBank,Financials,Banks
@@ -36,6 +35,7 @@ STLAM,STLAM.MI,Stellantis,Consumer Discretionary,Automobiles
 STMMI,STMMI.MI,STMicroelectronics,Information Technology,Semiconductors
 TEN,TEN.MI,Tenaris,Energy,Oil & Gas Equipment
 TIT,TIT.MI,Telecom Italia,Communication Services,Telecom Services
+TPRO,TPRO.MI,Technoprobe,Information Technology,Technology
 TRN,TRN.MI,Terna,Utilities,Electric Utilities
 UCG,UCG.MI,UniCredit,Financials,Banks
 UNI,UNI.MI,Unipol Assicurazioni,Financials,Insurance
