@@ -5,6 +5,7 @@ AVIO,AVIO.MI,Avio,Industrials,Aerospace & Defense
 AZM,AZM.MI,Azimut Holding,Financials,Asset Management
 BAMI,BAMI.MI,Banco BPM,Financials,Banks
 BC,BC.MI,Brunello Cucinelli,Consumer Discretionary,Luxury Goods
+BGN,BGN.MI,Banca Generali,Financials,Banks
 BMED,BMED.MI,Banca Mediolanum,Financials,Diversified Financial Services
 BMPS,BMPS.MI,Banca Monte dei Paschi,Financials,Banks
 BPE,BPE.MI,BPER Banca,Financials,Banks
@@ -19,16 +20,15 @@ HER,HER.MI,Hera,Utilities,Multi-Utilities
 IG,IG.MI,Italgas,Utilities,Gas Utilities
 INW,INW.MI,Infrastrutture Wireless Italiane,Communication Services,Telecom Infrastructure
 ISP,ISP.MI,Intesa Sanpaolo,Financials,Banks
-IVG,IVG.MI,Iveco Group,Industrials,Trucks & Heavy Machinery
 LDO,LDO.MI,Leonardo,Industrials,Aerospace & Defense
 LTMC,LTMC.MI,Lottomatica Group,Consumer Discretionary,Casinos & Gaming
 MB,MB.MI,Mediobanca,Financials,Banks
 MONC,MONC.MI,Moncler,Consumer Discretionary,Luxury Goods
 NEXI,NEXI.MI,Nexi,Financials,Payment Services
+PIRC,PIRC.MI,Pirelli & C.,Consumer Discretionary,Automobiles
 PRY,PRY.MI,Prysmian,Industrials,Electrical Equipment
 PST,PST.MI,Poste Italiane,Financials,Insurance & Postal Services
 RACE,RACE.MI,Ferrari,Consumer Discretionary,Automobiles
-REC,REC.MI,Recordati,Health Care,Pharmaceuticals
 SPM,SPM.MI,Saipem,Energy,Oil & Gas Services
 SRG,SRG.MI,Snam,Utilities,Gas Utilities
 STLAM,STLAM.MI,Stellantis,Consumer Discretionary,Automobiles
